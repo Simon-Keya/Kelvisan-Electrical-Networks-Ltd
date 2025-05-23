@@ -17,7 +17,7 @@ export const About = () => {
         <title>About Us | KELVISAN ELECTRICAL NETWORKS LTD</title>
         <meta
           name="description"
-          content="Kelvinsan Electrical Networks Ltd is a trusted leader in electrical, networking, and software solutions across East Africa."
+          content="KELVISAN ELECTRICAL NETWORKS LTD is a trusted leader in electrical, networking, and software solutions across East Africa."
         />
         <meta
           name="keywords"

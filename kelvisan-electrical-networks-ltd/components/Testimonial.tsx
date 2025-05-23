@@ -19,12 +19,12 @@ const testimonials = [
 
 export const Testimonials = () => {
   return (
-    <section className="bg-gray-50 dark:bg-gray-700 py-24 px-6" id="testimonials">
+    <section className=" bg-sky-200 py-24 px-6" id="testimonials">
       <div className="max-w-8xl mx-auto text-center">
-        <h2 className="text-4xl md:text-5xl font-extrabold text-gray-800 dark:text-white mb-4">
+        <h2 className="text-4xl md:text-5xl font-extrabold text-gray-700 mb-4">
           What Our Clients Say
         </h2>
-        <p className="text-gray-400 dark:text-gray-300 text-lg max-w-2xl mx-auto mb-12">
+        <p className="text-gray-700 text-lg max-w-2xl mx-auto mb-12">
           Hear from our satisfied clients who have trusted us with their homes, businesses, and technology needs.
         </p>
 
