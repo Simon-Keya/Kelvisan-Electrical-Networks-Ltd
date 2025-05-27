@@ -1,42 +1,207 @@
 'use client';
 
-import { About } from '@/components/About';
-import { AnimatedSection } from '@/components/AnimatedSection';
-import Contact from '@/components/Contact';
-import { Hero } from '@/components/Hero';
-import { Services } from '@/components/Service';
-import { Testimonials } from '@/components/Testimonial'; // Make sure this is the updated Testimonials file
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { FaBolt, FaFileAlt, FaLaptopCode, FaNetworkWired, FaNewspaper, FaUsers } from 'react-icons/fa';
+import { Hero } from '../components/Hero';
 
-export default function HomePage() {
+export default function Homepage() {
   return (
-    <main className="w-screen min-h-screen bg-blue-200 overflow-x-hidden">
-
-
-      {/* Hero Section */}
-      <AnimatedSection>
+    <main className="bg-gradient-to-b from-gray-100 via-white to-gray-200 text-gray-900 scroll-smooth">
+      {/* Hero */}
+      <motion.div>
         <Hero />
-      </AnimatedSection>
+      </motion.div>
 
-      {/* About Section */}
-      <AnimatedSection>
-         <About />
-      </AnimatedSection>
+      {/* Stats Section */}
+      <section className="pt-24 pb-20 px-6 lg:px-24 bg-gradient-to-b from-gray-50 via-white to-gray-100">
+        <motion.div
+          className="max-w-7xl mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+        >
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+            <StatItem value="50+" label="ISP Customers" />
+            <StatItem value="4+" label="ISP Centres" />
+            <StatItem value="24/7" label="Network Service" />
+            <StatItem value="99.9%" label="Uptime Guarantee" />
+          </div>
 
-      {/* Services Section */}
-      <AnimatedSection>
-        <Services />
-      </AnimatedSection>
+          <h2 className="text-4xl font-bold text-blue-800 text-center mb-4">Kelvisan Highlights</h2>
+          <p className="text-gray-600 text-center mb-12 max-w-3xl mx-auto">
+            Discover how Kelvisan Electrical Networks is reshaping Kenya’s digital and power infrastructure with innovation and community impact.
+          </p>
 
-      {/* Testimonials Section */}
-      <AnimatedSection>
-        <Testimonials />
-      </AnimatedSection>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <HighlightCard
+              icon={<FaNetworkWired className="text-3xl text-teal-600 mb-2" />}
+              title="Networking"
+              description="Reliable digital infrastructure and broadband access across Kenya."
+              link="/services#networking"
+            />
+            <HighlightCard
+              icon={<FaBolt className="text-3xl text-yellow-500 mb-2" />}
+              title="Electrical Solutions"
+              description="Power systems, renewable integrations, and smart energy grids."
+              link="/services#electrical"
+            />
+            <HighlightCard
+              icon={<FaUsers className="text-3xl text-blue-600 mb-2" />}
+              title="Membership"
+              description="Collaborate with innovators and gain exclusive member benefits."
+              link="/membership"
+            />
+            <HighlightCard
+              icon={<FaNewspaper className="text-3xl text-red-500 mb-2" />}
+              title="News"
+              description="Explore our latest projects, success stories, and updates."
+              link="/news"
+            />
+          </div>
+        </motion.div>
+      </section>
 
-      {/* Contact CTA Section */}
-      <AnimatedSection>
-          <Contact />
-      </AnimatedSection>
-      
+      {/* Featured Resources */}
+      <section className="py-24 px-6 lg:px-24 bg-gradient-to-b from-gray-100 via-white to-teal-50 border-t">
+        <motion.div
+          className="max-w-7xl mx-auto"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-4xl font-bold text-blue-700 mb-12 text-center">
+            Featured Resources
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                title: 'Software Installation Guide',
+                description: 'Step-by-step guides for deploying critical infrastructure software.',
+                link: '/resources',
+                icon: <FaLaptopCode />,
+              },
+              {
+                title: 'ICT Policy Briefs',
+                description: 'Strategic insights for digital policy and infrastructure governance.',
+                link: '/resources#ict',
+                icon: <FaFileAlt />,
+              },
+              {
+                title: 'Network Optimization Tips',
+                description: 'Pro tips to maximize connectivity, uptime, and efficiency.',
+                link: '/resources#network',
+                icon: <FaNetworkWired />,
+              },
+            ].map((res, i) => (
+              <motion.div
+                key={i}
+                className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300"
+                whileHover={{ scale: 1.03 }}
+              >
+                <div className="text-blue-600 text-2xl mb-2">{res.icon}</div>
+                <h3 className="text-xl font-semibold text-blue-700 mb-2">{res.title}</h3>
+                <p className="text-gray-600 mb-4">{res.description}</p>
+                <Link href={res.link} className="text-sm text-blue-600 hover:underline font-medium">
+                  View Resource →
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Call to Action */}
+      <motion.section
+        className="relative py-24 px-6 lg:px-32 text-center overflow-hidden bg-gradient-to-br from-yellow-100 via-white to-yellow-200 border-t"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.7 }}
+        viewport={{ once: true }}
+      >
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-yellow-400 to-white"></div>
+
+        <div className="relative z-10">
+          <motion.h3
+            className="text-4xl font-extrabold text-teal-800 mb-6 tracking-tight"
+            initial={{ y: 30, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            Partner with Kelvisan
+          </motion.h3>
+          <motion.p
+            className="text-gray-700 text-lg mb-10 max-w-3xl mx-auto leading-relaxed"
+            initial={{ y: 30, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            We are revolutionizing infrastructure in Kenya—building smart cities, enabling broadband access, and delivering sustainable power. Let’s build the future together.
+          </motion.p>
+          <motion.div
+            className="flex flex-col sm:flex-row justify-center items-center gap-5"
+            initial={{ scale: 0.95, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <Link href="/contact">
+              <button className="px-6 py-3 text-white bg-teal-600 hover:bg-teal-700 rounded-md font-medium shadow-md hover:shadow-lg transition duration-300 transform hover:scale-105">
+                Contact Us
+              </button>
+            </Link>
+            <Link href="/about">
+              <button className="px-6 py-3 bg-yellow-300 text-teal-900 rounded-md font-medium shadow-md hover:bg-yellow-400 transition duration-300 transform hover:scale-105">
+                Join Kelvisan
+              </button>
+            </Link>
+          </motion.div>
+        </div>
+      </motion.section>
     </main>
+  );
+}
+
+// StatItem and HighlightCard remain the same
+
+// Stat Item Component
+function StatItem({ value, label }: { value: string; label: string }) {
+  return (
+    <motion.div
+      className="text-center"
+      whileHover={{ scale: 1.07 }}
+      transition={{ type: 'spring', stiffness: 200 }}
+    >
+      <div className="text-4xl font-bold text-teal-700">{value}</div>
+      <div className="text-gray-600 text-sm">{label}</div>
+    </motion.div>
+  );
+}
+
+// Highlight Card Component
+function HighlightCard({
+  icon,
+  title,
+  description,
+  link,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  link: string;
+}) {
+  return (
+    <motion.div
+      className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 border hover:border-teal-300"
+      whileHover={{ scale: 1.03 }}
+    >
+      <div className="mb-3">{icon}</div>
+      <h3 className="text-lg font-semibold text-teal-700 mb-1">{title}</h3>
+      <p className="text-gray-600 text-sm mb-3">{description}</p>
+      <Link href={link} className="text-sm text-blue-600 hover:underline font-medium">
+        Learn more →
+      </Link>
+    </motion.div>
   );
 }

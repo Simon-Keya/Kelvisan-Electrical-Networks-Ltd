@@ -27,7 +27,7 @@ export const Hero = () => {
         transition={{ duration: 0.8 }}
         className="relative z-20 w-full px-6 md:px-12 text-center text-blue-700 space-y-8"
       >
-        <h1 className="text-3xl md:text-5xl font-extrabold leading-tight text-blue-700 drop-shadow-lg">
+        <h1 className="text-3xl md:text-5xl font-extrabold leading-tight text-blue-600 drop-shadow-lg">
           Empowering Your Future with Reliable Networks and Innovative Software
         </h1>
 

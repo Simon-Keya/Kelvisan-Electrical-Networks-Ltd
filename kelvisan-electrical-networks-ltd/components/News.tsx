@@ -6,48 +6,77 @@ const newsItems = [
   {
     title: 'Kelvisan Launches Smart Grid Monitoring Tool',
     date: 'May 10, 2025',
-    description: 'Kelvisan debuts a new tool to enhance visibility and analytics for power grids in remote areas.',
+    description: 'Kelvisan unveils a real-time smart grid analytics platform for rural electrification and data-driven load management across Kenya.',
   },
   {
     title: 'Partnership with County Governments on Electrification',
     date: 'April 20, 2025',
-    description: 'Kelvisan partners with local governments to expand power access through decentralized networks.',
+    description: 'Kelvisan partners with five county governments to implement hybrid solar-grid networks for underserved communities.',
   },
   {
     title: 'Kelvisan Software Wins Innovation Award',
     date: 'March 12, 2025',
-    description: 'Kelvisan was recognized for its smart load-balancing software at the African Tech Awards.',
+    description: 'Kelvisan’s AI-driven load balancing software won first place at the African Tech Awards for its impact on energy efficiency.',
+  },
+  {
+    title: 'New Data Center Opened in Nakuru',
+    date: 'February 5, 2025',
+    description: 'Kelvisan commissions a state-of-the-art Tier III data center in Nakuru, enhancing cloud and infrastructure services across the Rift Valley.',
+  },
+  {
+    title: 'Kelvisan Trains 500+ Youth in Networking & Energy Systems',
+    date: 'January 20, 2025',
+    description: 'Through its Skills Forward Program, Kelvisan has equipped youth with industry certifications in fiber optics, electrical safety, and network administration.',
+  },
+  {
+    title: 'Kelvisan Releases Network Optimization Toolkit',
+    date: 'December 10, 2024',
+    description: 'The toolkit allows ISPs and enterprises to enhance network performance, minimize downtime, and automate diagnostics.',
   },
 ];
 
 const News = () => {
   return (
-    <section className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-6 py-16">
-      <div className="max-w-5xl mx-auto">
+    <section className="min-h-screen py-24 px-6 lg:px-24 bg-gradient-to-b from-white via-teal-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-white">
+      <motion.div
+        className="max-w-6xl mx-auto"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        viewport={{ once: true }}
+      >
         <motion.h2
-          className="text-4xl md:text-5xl font-extrabold text-center mb-10"
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
+          className="text-4xl md:text-5xl font-extrabold text-center mb-16 text-teal-700 dark:text-teal-300"
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
         >
           Latest News & Announcements
         </motion.h2>
 
-        <div className="space-y-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {newsItems.map((item, index) => (
             <motion.div
               key={index}
-              className="p-6 bg-teal-100 dark:bg-gray-800 rounded-lg shadow-md"
+              className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition duration-300 border border-teal-100 dark:border-gray-700"
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 * index }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 * index, duration: 0.5 }}
+              viewport={{ once: true }}
             >
-              <h3 className="text-2xl font-bold">{item.title}</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">{item.date}</p>
-              <p>{item.description}</p>
+              <h3 className="text-xl font-semibold text-teal-700 dark:text-teal-400 mb-2">
+                {item.title}
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 italic">
+                {item.date}
+              </p>
+              <p className="text-gray-700 dark:text-gray-300">
+                {item.description}
+              </p>
             </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };
