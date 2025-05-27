@@ -2,19 +2,26 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { FaBolt, FaFileAlt, FaLaptopCode, FaNetworkWired, FaNewspaper, FaUsers } from 'react-icons/fa';
+import {
+  FaBolt,
+  FaFileAlt,
+  FaLaptopCode,
+  FaNetworkWired,
+  FaNewspaper,
+  FaUsers
+} from 'react-icons/fa';
 import { Hero } from '../components/Hero';
 
 export default function Homepage() {
   return (
-    <main className="bg-gradient-to-b from-gray-100 via-white to-gray-200 text-gray-900 scroll-smooth">
-      {/* Hero */}
+    <main className="bg-gradient-to-b from-white via-gray-50 to-teal-50 text-gray-900 scroll-smooth">
+      {/* Hero Section */}
       <motion.div>
         <Hero />
       </motion.div>
 
       {/* Stats Section */}
-      <section className="pt-24 pb-20 px-6 lg:px-24 bg-gradient-to-b from-gray-50 via-white to-gray-100">
+      <section className="pt-24 pb-20 px-6 lg:px-24 bg-gradient-to-b from-gray-50 via-white to-teal-50">
         <motion.div
           className="max-w-7xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
@@ -28,43 +35,54 @@ export default function Homepage() {
             <StatItem value="24/7" label="Network Service" />
             <StatItem value="99.9%" label="Uptime Guarantee" />
           </div>
+        </motion.div>
+      </section>
 
-          <h2 className="text-4xl font-bold text-blue-800 text-center mb-4">Kelvisan Highlights</h2>
-          <p className="text-gray-600 text-center mb-12 max-w-3xl mx-auto">
-            Discover how Kelvisan Electrical Networks is reshaping Kenya’s digital and power infrastructure with innovation and community impact.
+      {/* Highlights Section */}
+      <section className="pt-24 pb-20 px-6 lg:px-24 bg-gradient-to-b from-white via-yellow-50 to-white border-t">
+        <motion.div
+          className="max-w-7xl mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-4xl font-bold text-teal-700 text-center mb-4">Core Focus Areas</h2>
+          <p className="text-gray-700 text-center mb-12 max-w-3xl mx-auto">
+            Our services cover critical areas that shape modern living—energy, internet, technology, and collaboration.
           </p>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <HighlightCard
               icon={<FaNetworkWired className="text-3xl text-teal-600 mb-2" />}
               title="Networking"
-              description="Reliable digital infrastructure and broadband access across Kenya."
+              description="Reliable broadband access and national digital infrastructure."
               link="/services#networking"
             />
             <HighlightCard
               icon={<FaBolt className="text-3xl text-yellow-500 mb-2" />}
               title="Electrical Solutions"
-              description="Power systems, renewable integrations, and smart energy grids."
+              description="Smart energy grids, power system design, and renewables."
               link="/services#electrical"
             />
             <HighlightCard
               icon={<FaUsers className="text-3xl text-blue-600 mb-2" />}
               title="Membership"
-              description="Collaborate with innovators and gain exclusive member benefits."
+              description="Join a visionary community transforming infrastructure."
               link="/membership"
             />
             <HighlightCard
               icon={<FaNewspaper className="text-3xl text-red-500 mb-2" />}
               title="News"
-              description="Explore our latest projects, success stories, and updates."
+              description="Stay updated with our innovations and national contributions."
               link="/news"
             />
           </div>
         </motion.div>
       </section>
 
-      {/* Featured Resources */}
-      <section className="py-24 px-6 lg:px-24 bg-gradient-to-b from-gray-100 via-white to-teal-50 border-t">
+      {/* Resources Section */}
+      <section className="py-24 px-6 lg:px-24 bg-gradient-to-b from-white via-gray-50 to-teal-50 border-t">
         <motion.div
           className="max-w-7xl mx-auto"
           initial={{ opacity: 0, y: 40 }}
@@ -72,39 +90,41 @@ export default function Homepage() {
           transition={{ duration: 0.7 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-4xl font-bold text-blue-700 mb-12 text-center">
-            Featured Resources
-          </h2>
+          <h2 className="text-4xl font-bold text-teal-700 mb-6 text-center">Featured Resources</h2>
+          <p className="text-gray-700 text-center mb-12 max-w-3xl mx-auto">
+            Explore curated resources to help you stay ahead—whether you’re implementing software, planning network infrastructure, or shaping ICT policy.
+          </p>
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
                 title: 'Software Installation Guide',
-                description: 'Step-by-step guides for deploying critical infrastructure software.',
+                description: 'Deploy infrastructure software with step-by-step instructions.',
                 link: '/resources',
                 icon: <FaLaptopCode />,
               },
               {
                 title: 'ICT Policy Briefs',
-                description: 'Strategic insights for digital policy and infrastructure governance.',
-                link: '/resources#ict',
+                description: 'Understand governance and tech strategy in the Kenyan digital space.',
+                link: '/resources',
                 icon: <FaFileAlt />,
               },
               {
                 title: 'Network Optimization Tips',
-                description: 'Pro tips to maximize connectivity, uptime, and efficiency.',
-                link: '/resources#network',
+                description: 'Increase network uptime and efficiency with proven strategies.',
+                link: '/resources',
                 icon: <FaNetworkWired />,
               },
-            ].map((res, i) => (
+            ].map((resource, i) => (
               <motion.div
                 key={i}
-                className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300"
+                className="p-6 bg-white border border-teal-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300"
                 whileHover={{ scale: 1.03 }}
               >
-                <div className="text-blue-600 text-2xl mb-2">{res.icon}</div>
-                <h3 className="text-xl font-semibold text-blue-700 mb-2">{res.title}</h3>
-                <p className="text-gray-600 mb-4">{res.description}</p>
-                <Link href={res.link} className="text-sm text-blue-600 hover:underline font-medium">
+                <div className="text-teal-600 text-2xl mb-2">{resource.icon}</div>
+                <h3 className="text-xl font-semibold text-teal-700 mb-2">{resource.title}</h3>
+                <p className="text-gray-600 mb-4">{resource.description}</p>
+                <Link href={resource.link} className="text-sm text-teal-700 hover:underline font-medium">
                   View Resource →
                 </Link>
               </motion.div>
@@ -113,7 +133,7 @@ export default function Homepage() {
         </motion.div>
       </section>
 
-      {/* Call to Action */}
+      {/* Call to Action Section */}
       <motion.section
         className="relative py-24 px-6 lg:px-32 text-center overflow-hidden bg-gradient-to-br from-yellow-100 via-white to-yellow-200 border-t"
         initial={{ opacity: 0 }}
@@ -121,7 +141,7 @@ export default function Homepage() {
         transition={{ delay: 0.2, duration: 0.7 }}
         viewport={{ once: true }}
       >
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-yellow-400 to-white"></div>
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-yellow-400 to-white" />
 
         <div className="relative z-10">
           <motion.h3
@@ -138,7 +158,7 @@ export default function Homepage() {
             whileInView={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            We are revolutionizing infrastructure in Kenya—building smart cities, enabling broadband access, and delivering sustainable power. Let’s build the future together.
+            We are revolutionizing Kenya’s digital and energy landscape. From smart cities to secure networks—let’s build the future together.
           </motion.p>
           <motion.div
             className="flex flex-col sm:flex-row justify-center items-center gap-5"
@@ -147,12 +167,12 @@ export default function Homepage() {
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <Link href="/contact">
-              <button className="px-6 py-3 text-white bg-teal-600 hover:bg-teal-700 rounded-md font-medium shadow-md hover:shadow-lg transition duration-300 transform hover:scale-105">
+              <button className="px-6 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-md font-medium shadow-md hover:shadow-lg transition duration-300 transform hover:scale-105">
                 Contact Us
               </button>
             </Link>
             <Link href="/about">
-              <button className="px-6 py-3 bg-yellow-300 text-teal-900 rounded-md font-medium shadow-md hover:bg-yellow-400 transition duration-300 transform hover:scale-105">
+              <button className="px-6 py-3 bg-yellow-300 text-blue-900 rounded-md font-medium shadow-md hover:bg-yellow-400 transition duration-300 transform hover:scale-105">
                 Join Kelvisan
               </button>
             </Link>
@@ -163,9 +183,7 @@ export default function Homepage() {
   );
 }
 
-// StatItem and HighlightCard remain the same
-
-// Stat Item Component
+// Reusable Stat Component
 function StatItem({ value, label }: { value: string; label: string }) {
   return (
     <motion.div
@@ -173,13 +191,13 @@ function StatItem({ value, label }: { value: string; label: string }) {
       whileHover={{ scale: 1.07 }}
       transition={{ type: 'spring', stiffness: 200 }}
     >
-      <div className="text-4xl font-bold text-teal-700">{value}</div>
+      <div className="text-4xl font-bold text-blue-700">{value}</div>
       <div className="text-gray-600 text-sm">{label}</div>
     </motion.div>
   );
 }
 
-// Highlight Card Component
+// Reusable Highlight Card
 function HighlightCard({
   icon,
   title,
@@ -199,7 +217,7 @@ function HighlightCard({
       <div className="mb-3">{icon}</div>
       <h3 className="text-lg font-semibold text-teal-700 mb-1">{title}</h3>
       <p className="text-gray-600 text-sm mb-3">{description}</p>
-      <Link href={link} className="text-sm text-blue-600 hover:underline font-medium">
+      <Link href={link} className="text-sm text-teal-700 hover:underline font-medium">
         Learn more →
       </Link>
     </motion.div>

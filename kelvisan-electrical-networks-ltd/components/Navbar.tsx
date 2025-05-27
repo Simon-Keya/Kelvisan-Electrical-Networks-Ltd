@@ -16,7 +16,7 @@ export const Navbar = () => {
         </Link>
 
         {/* Desktop Nav Links */}
-        <div className="hidden md:flex gap-10 text-lg font-medium">
+        <div className="hidden md:flex gap-10 text-md font-medium">
           <Link href="/" className="hover:text-blue-400 transition">Home</Link>
           <Link href="/about" className="hover:text-blue-400 transition">About Us</Link>
           <Link href="/services" className="hover:text-blue-400 transition">Services</Link>
