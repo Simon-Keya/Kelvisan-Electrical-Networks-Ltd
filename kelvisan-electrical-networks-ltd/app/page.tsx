@@ -121,10 +121,10 @@ export default function Homepage() {
                 className="p-6 bg-white border border-teal-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300"
                 whileHover={{ scale: 1.03 }}
               >
-                <div className="text-teal-600 text-2xl mb-2">{resource.icon}</div>
-                <h3 className="text-xl font-semibold text-teal-700 mb-2">{resource.title}</h3>
+                <div className="text-blue-600 text-2xl mb-2">{resource.icon}</div>
+                <h3 className="text-xl font-semibold text-blue-700 mb-2">{resource.title}</h3>
                 <p className="text-gray-600 mb-4">{resource.description}</p>
-                <Link href={resource.link} className="text-sm text-teal-700 hover:underline font-medium">
+                <Link href={resource.link} className="text-sm text-blue-700 hover:underline font-medium">
                   View Resource →
                 </Link>
               </motion.div>
@@ -191,7 +191,7 @@ function StatItem({ value, label }: { value: string; label: string }) {
       whileHover={{ scale: 1.07 }}
       transition={{ type: 'spring', stiffness: 200 }}
     >
-      <div className="text-4xl font-bold text-blue-700">{value}</div>
+      <div className="text-4xl font-bold text-teal-700">{value}</div>
       <div className="text-gray-600 text-sm">{label}</div>
     </motion.div>
   );
@@ -217,7 +217,7 @@ function HighlightCard({
       <div className="mb-3">{icon}</div>
       <h3 className="text-lg font-semibold text-teal-700 mb-1">{title}</h3>
       <p className="text-gray-600 text-sm mb-3">{description}</p>
-      <Link href={link} className="text-sm text-teal-700 hover:underline font-medium">
+      <Link href={link} className="text-sm text-blue-700 hover:underline font-medium">
         Learn more →
       </Link>
     </motion.div>
