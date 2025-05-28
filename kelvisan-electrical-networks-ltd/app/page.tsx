@@ -8,7 +8,7 @@ import {
   FaLaptopCode,
   FaNetworkWired,
   FaNewspaper,
-  FaUsers
+  FaUsers,
 } from 'react-icons/fa';
 import { Hero } from '../components/Hero';
 
@@ -21,7 +21,7 @@ export default function Homepage() {
       </motion.div>
 
       {/* Stats Section */}
-      <section className="pt-24 pb-20 px-6 lg:px-24 bg-gradient-to-b from-gray-50 via-white to-teal-50">
+      <section className="pt-24 pb-20 px-6 lg:px-24 bg-gradient-to-b from-gray-100 via-white to-sky-50">
         <motion.div
           className="max-w-7xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
@@ -29,17 +29,17 @@ export default function Homepage() {
           transition={{ duration: 0.7 }}
           viewport={{ once: true }}
         >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-            <StatItem value="50+" label="ISP Customers" />
-            <StatItem value="4+" label="ISP Centres" />
-            <StatItem value="24/7" label="Network Service" />
-            <StatItem value="99.9%" label="Uptime Guarantee" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+            <StatCard value="50+" label="ISP Customers" />
+            <StatCard value="4+" label="ISP Centres" />
+            <StatCard value="24/7" label="Network Service" />
+            <StatCard value="99.9%" label="Uptime Guarantee" />
           </div>
         </motion.div>
       </section>
 
       {/* Highlights Section */}
-      <section className="pt-24 pb-20 px-6 lg:px-24 bg-gradient-to-b from-white via-yellow-50 to-white border-t">
+      <section className="pt-24 pb-20 px-6 lg:px-24 bg-gradient-to-b from-white via-blue-50 to-white border-t">
         <motion.div
           className="max-w-7xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
@@ -122,7 +122,7 @@ export default function Homepage() {
                 whileHover={{ scale: 1.03 }}
               >
                 <div className="text-blue-600 text-2xl mb-2">{resource.icon}</div>
-                <h3 className="text-xl font-semibold text-blue-700 mb-2">{resource.title}</h3>
+                <h3 className="text-xl font-semibold text-teal-700 mb-2">{resource.title}</h3>
                 <p className="text-gray-600 mb-4">{resource.description}</p>
                 <Link href={resource.link} className="text-sm text-blue-700 hover:underline font-medium">
                   View Resource →
@@ -142,7 +142,6 @@ export default function Homepage() {
         viewport={{ once: true }}
       >
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-yellow-400 to-white" />
-
         <div className="relative z-10">
           <motion.h3
             className="text-4xl font-extrabold text-teal-800 mb-6 tracking-tight"
@@ -183,21 +182,20 @@ export default function Homepage() {
   );
 }
 
-// Reusable Stat Component
-function StatItem({ value, label }: { value: string; label: string }) {
+// 🎯 Raised Stat Card
+function StatCard({ value, label }: { value: string; label: string }) {
   return (
     <motion.div
-      className="text-center"
-      whileHover={{ scale: 1.07 }}
-      transition={{ type: 'spring', stiffness: 200 }}
+      className="p-6 bg-white dark:bg-blue-100 rounded-xl shadow-md hover:shadow-xl border border-blue-100 dark:border-blue-100 text-center transition-transform duration-300 hover:-translate-y-1"
+      whileHover={{ scale: 1.05 }}
     >
-      <div className="text-4xl font-bold text-teal-700">{value}</div>
-      <div className="text-gray-600 text-sm">{label}</div>
+      <div className="text-4xl font-bold text-teal-700 dark:text-teal-700">{value}</div>
+      <div className="text-sm text-gray-950 dark:text-gray-900 mt-1">{label}</div>
     </motion.div>
   );
 }
 
-// Reusable Highlight Card
+// 📌 Highlight Card
 function HighlightCard({
   icon,
   title,
