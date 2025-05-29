@@ -8,59 +8,69 @@ export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-teal-800 shadow-md text-white transition-colors duration-300">
-      <div className="container mx-auto flex justify-between items-center px-6 py-4">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-teal-800 text-white shadow-md transition-all duration-300 backdrop-blur-sm bg-opacity-95">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
-        <Link href="/" className="text-3xl font-extrabold tracking-wide text-white">
+        <Link href="/" className="text-2xl sm:text-3xl font-bold tracking-wide text-white hover:text-yellow-400 transition">
           KELVISAN
         </Link>
 
-        {/* Desktop Nav Links */}
-        <div className="hidden md:flex gap-10 text-md font-medium">
-          <Link href="/" className="hover:text-yellow-400 transition">Home</Link>
-          <Link href="/about" className="hover:text-yellow-400 transition">About Us</Link>
-          <Link href="/services" className="hover:text-yellow-400 transition">Services</Link>
-          <Link href="/news" className="hover:text-yellow-400 transition">News</Link>
-          <Link href="/resources" className="hover:text-yellow-400 transition">Resources</Link>
-          <Link href="/contact" className="hover:text-yellow-400 transition">Contact</Link>
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center gap-8 text-sm lg:text-base font-medium">
+          {['Home', 'About Us', 'Services', 'Electrical','Networking', 'Resources', 'Contact'].map((label, idx) => (
+            <Link
+              key={idx}
+              href={`/${label.toLowerCase().replace(/\s/g, '') === 'home' ? '' : label.toLowerCase().replace(/\s/g, '')}`}
+              className="hover:text-yellow-400 transition duration-200"
+            >
+              {label}
+            </Link>
+          ))}
         </div>
 
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center gap-4">
           <Link href="/contact">
-            <button className="border border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-teal-600 transition">
+            <button className="border border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-teal-800 transition duration-300">
               Need Help❓
             </button>
           </Link>
           <Link href="/about">
-            <button className="bg-yellow-400 text-teal-900 font-semibold px-6 py-2 rounded-full hover:bg-yellow-300 transition shadow">
+            <button className="bg-yellow-400 text-teal-900 font-semibold px-6 py-2 rounded-full hover:bg-yellow-300 transition duration-300 shadow">
               Hire Us
             </button>
           </Link>
         </div>
 
-        {/* Mobile Menu Icon */}
-        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden">
+        {/* Mobile Menu Toggle */}
+        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden focus:outline-none">
           {isMenuOpen ? (
-            <XMarkIcon className="w-6 h-6 text-black" />
+            <XMarkIcon className="w-7 h-7 text-white" />
           ) : (
-            <Bars3Icon className="w-6 h-6 text-black" />
+            <Bars3Icon className="w-7 h-7 text-white" />
           )}
         </button>
       </div>
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-teal-800 text-white px-6 py-4 space-y-4 transition-colors duration-300">
-          <Link href="/about" onClick={() => setIsMenuOpen(false)} className="block text-lg hover:text-yellow-300">About Us</Link>
-          <Link href="/services" onClick={() => setIsMenuOpen(false)} className="block text-lg hover:text-yellow-300">Services</Link>
-          <Link href="/news" onClick={() => setIsMenuOpen(false)} className="block text-lg hover:text-yellow-300">News</Link>
-          <Link href="/resources" onClick={() => setIsMenuOpen(false)} className="block text-lg hover:text-yellow-300">Resources</Link>
-          <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="block text-lg hover:text-yellow-300">Contact</Link>
+        <div className="md:hidden bg-teal-800 text-white px-6 py-6 space-y-5 transition-all duration-300 border-t border-teal-700">
+          <div className="space-y-3 text-lg font-medium">
+            {['Home', 'About Us', 'Services', 'Electrical','Networking', 'Resources', 'Contact'].map((label, idx) => (
+              <Link
+                key={idx}
+                href={`/${label.toLowerCase().replace(/\s/g, '') === 'home' ? '' : label.toLowerCase().replace(/\s/g, '')}`}
+                onClick={() => setIsMenuOpen(false)}
+                className="block hover:bg-teal-700 px-3 py-2 rounded transition duration-200"
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
 
-          <div className="flex flex-col gap-3 mt-4">
+          <div className="border-t border-teal-600 pt-4 space-y-3">
             <Link href="/contact">
-              <button className="w-full border border-white text-white py-2 rounded-full hover:bg-white hover:text-teal-600 transition">
+              <button className="w-full border border-white text-white py-2 rounded-full hover:bg-white hover:text-teal-800 transition duration-300">
                 Need Help❓
               </button>
             </Link>
