@@ -21,7 +21,7 @@ export default function Homepage() {
       </motion.div>
 
       {/* Stats Section */}
-      <section className="pt-24 pb-20 px-6 lg:px-24 bg-gradient-to-b from-gray-100 via-white to-sky-50">
+      <section className="pt-24 pb-20 px-6 lg:px-24 bg-gradient-to-b from-gray-100 via-white to-sky-100">
         <motion.div
           className="max-w-7xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
@@ -39,7 +39,7 @@ export default function Homepage() {
       </section>
 
       {/* Highlights Section */}
-      <section className="pt-24 pb-20 px-6 lg:px-24 bg-gradient-to-b from-white via-blue-50 to-white border-t">
+      <section className="pt-24 pb-20 px-6 lg:px-24 bg-gradient-to-b from-white via-blue-100 to-white border-t">
         <motion.div
           className="max-w-7xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
@@ -57,13 +57,13 @@ export default function Homepage() {
               icon={<FaNetworkWired className="text-3xl text-teal-600 mb-2" />}
               title="Networking"
               description="Reliable broadband access and national digital infrastructure."
-              link="/services#networking"
+              link="/networking"
             />
             <HighlightCard
               icon={<FaBolt className="text-3xl text-yellow-500 mb-2" />}
               title="Electrical Solutions"
               description="Smart energy grids, power system design, and renewables."
-              link="/services#electrical"
+              link="/electrical"
             />
             <HighlightCard
               icon={<FaUsers className="text-3xl text-blue-600 mb-2" />}
@@ -186,7 +186,7 @@ export default function Homepage() {
 function StatCard({ value, label }: { value: string; label: string }) {
   return (
     <motion.div
-      className="p-6 bg-white dark:bg-blue-100 rounded-xl shadow-md hover:shadow-xl border border-blue-100 dark:border-blue-100 text-center transition-transform duration-300 hover:-translate-y-1"
+      className="p-6 bg-white dark:bg-blue-200 rounded-xl shadow-md hover:shadow-xl border border-blue-200 dark:border-blue-200 text-center transition-transform duration-300 hover:-translate-y-1"
       whileHover={{ scale: 1.05 }}
     >
       <div className="text-4xl font-bold text-teal-700 dark:text-teal-700">{value}</div>

@@ -17,7 +17,7 @@ export const Navbar = () => {
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8 text-sm lg:text-base font-medium">
-          {['Home', 'About Us', 'Services', 'Electrical','Networking', 'Resources', 'Contact'].map((label, idx) => (
+          {['Home', 'About', 'Services', 'Electrical','Networking', 'Resources', 'Contact'].map((label, idx) => (
             <Link
               key={idx}
               href={`/${label.toLowerCase().replace(/\s/g, '') === 'home' ? '' : label.toLowerCase().replace(/\s/g, '')}`}
@@ -56,7 +56,7 @@ export const Navbar = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-teal-800 text-white px-6 py-6 space-y-5 transition-all duration-300 border-t border-teal-700">
           <div className="space-y-3 text-lg font-medium">
-            {['Home', 'About Us', 'Services', 'Electrical','Networking', 'Resources', 'Contact'].map((label, idx) => (
+            {['Home', 'About', 'Services', 'Electrical','Networking', 'Resources', 'Contact'].map((label, idx) => (
               <Link
                 key={idx}
                 href={`/${label.toLowerCase().replace(/\s/g, '') === 'home' ? '' : label.toLowerCase().replace(/\s/g, '')}`}
