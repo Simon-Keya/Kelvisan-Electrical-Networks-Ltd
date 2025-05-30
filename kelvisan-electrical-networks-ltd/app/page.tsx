@@ -186,10 +186,10 @@ export default function Homepage() {
 function StatCard({ value, label }: { value: string; label: string }) {
   return (
     <motion.div
-      className="p-6 bg-white dark:bg-blue-200 rounded-xl shadow-md hover:shadow-xl border border-blue-200 dark:border-blue-200 text-center transition-transform duration-300 hover:-translate-y-1"
+      className="p-6 bg-white dark:bg-blue-100 rounded-xl shadow-md hover:shadow-xl border border-blue-100 dark:border-blue-100 text-center transition-transform duration-300 hover:-translate-y-1"
       whileHover={{ scale: 1.05 }}
     >
-      <div className="text-4xl font-bold text-teal-700 dark:text-teal-700">{value}</div>
+      <div className="text-4xl font-bold text-teal-900 dark:text-teal-900">{value}</div>
       <div className="text-sm text-gray-950 dark:text-gray-900 mt-1">{label}</div>
     </motion.div>
   );

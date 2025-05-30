@@ -11,13 +11,18 @@ export const Navbar = () => {
     <nav className="fixed top-0 left-0 w-full z-50 bg-teal-800 text-white shadow-md transition-all duration-300 backdrop-blur-sm bg-opacity-95">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
-        <Link href="/" className="text-2xl sm:text-3xl font-bold tracking-wide text-white hover:text-yellow-400 transition">
-          KELVISAN
+        <Link href="/" className="flex items-center gap-2">
+          <img
+            src="/logo.png" // Place your logo image in the `public/` directory
+            alt="Kelvisan Logo"
+            className="h-18 w-auto object-contain"
+          />
+          <span className="sr-only">Kelvisan</span>
         </Link>
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8 text-sm lg:text-base font-medium">
-          {['Home', 'About', 'Services', 'Electrical','Networking', 'Resources', 'Contact'].map((label, idx) => (
+          {['Home', 'About', 'Services', 'Electrical', 'Networking', 'Resources', 'Contact'].map((label, idx) => (
             <Link
               key={idx}
               href={`/${label.toLowerCase().replace(/\s/g, '') === 'home' ? '' : label.toLowerCase().replace(/\s/g, '')}`}
@@ -56,7 +61,7 @@ export const Navbar = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-teal-800 text-white px-6 py-6 space-y-5 transition-all duration-300 border-t border-teal-700">
           <div className="space-y-3 text-lg font-medium">
-            {['Home', 'About', 'Services', 'Electrical','Networking', 'Resources', 'Contact'].map((label, idx) => (
+            {['Home', 'About', 'Services', 'Electrical', 'Networking', 'Resources', 'Contact'].map((label, idx) => (
               <Link
                 key={idx}
                 href={`/${label.toLowerCase().replace(/\s/g, '') === 'home' ? '' : label.toLowerCase().replace(/\s/g, '')}`}
