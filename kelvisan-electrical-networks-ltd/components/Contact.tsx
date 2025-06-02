@@ -82,7 +82,7 @@ export default function Contact() {
                   <EnvelopeIcon className="w-6 h-6 text-secondary" />
                   <div>
                     <h4 className="font-semibold">Email Address</h4>
-                    <p>info@kelvinsan.co.ke</p>
+                    <p>kelvisanelectricals@gmail.com</p>
                   </div>
                 </div>
               </div>
