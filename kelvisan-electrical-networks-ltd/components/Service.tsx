@@ -108,7 +108,7 @@ const sectionData = [
           'Infrastructure strategy planning',
           'System updates & patching',
         ],
-        image: '/services/it-support.jpg',
+        image: '/services/It.jpg',
         icon: <ChatBubbleLeftRightIcon className="w-8 h-8 text-cyan-400" />,
       },
     ],
@@ -183,7 +183,7 @@ export function Services() {
           variants={fadeInUp}
           custom={1}
         >
-          From reliable power installations to cutting-edge digital solutions, Kelvinsan is your trusted technology partner.
+          From reliable power installations to cutting-edge digital solutions, Kelvisan is your trusted technology partner.
         </motion.p>
 
         {/* Services */}

@@ -8,17 +8,21 @@ export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-teal-800 text-white shadow-md transition-all duration-300 backdrop-blur-sm bg-opacity-95">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-teal-900 text-white shadow-md transition-all duration-300 backdrop-blur-sm bg-opacity-95">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <img
-            src="/logo.png" // Place your logo image in the `public/` directory
-            alt="Kelvisan Logo"
-            className="h-18 w-auto object-contain"
-          />
-          <span className="sr-only">Kelvisan</span>
-        </Link>
+      <Link href="/" className="flex flex-col text-white leading-tight tracking-tight space-y-[-2px]">
+  <span className="text-lg lg:text-2xl font-black tracking-tight font-[Oswald] text-yellow-400 ">
+    KELVISAN
+  </span>
+  <span className="text-[7px] lg:text-xs font-semibold text-teal-200 uppercase">
+    Electrical Networks Ltd
+  </span>
+  <span className="text-[5px] lg:text-xs font-medium text-yellow-200 italic">
+    Empowering your future with reliable solutions
+  </span>
+</Link>
+
+
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8 text-sm lg:text-base font-medium">
