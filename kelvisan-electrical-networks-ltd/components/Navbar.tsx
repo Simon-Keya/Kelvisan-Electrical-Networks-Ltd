@@ -8,7 +8,7 @@ export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-teal-900 text-white shadow-md transition-all duration-300 backdrop-blur-sm bg-opacity-95">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-teal-800 text-white shadow-md transition-all duration-300 backdrop-blur-sm bg-opacity-95">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
       <Link href="/" className="flex flex-col text-white leading-tight tracking-tight space-y-[-2px]">
   <span className="text-lg lg:text-2xl font-black tracking-tight font-[Oswald] text-yellow-400 ">

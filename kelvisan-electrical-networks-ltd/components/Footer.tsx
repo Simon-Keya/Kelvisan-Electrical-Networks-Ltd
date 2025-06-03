@@ -70,7 +70,7 @@ export const Footer = () => {
 
       {/* Footer Bottom */}
       <div className="text-center mt-10 pt-6 border-t border-teal-800 text-md text-white">
-        © {currentYear} Kelvinsan Electrical Networks Ltd. All rights reserved.
+        © {currentYear} Kelvisan Electrical Networks Ltd. All rights reserved.
       </div>
     </footer>
   );
