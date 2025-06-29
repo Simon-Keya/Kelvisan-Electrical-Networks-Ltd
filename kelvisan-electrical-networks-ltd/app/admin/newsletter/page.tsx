@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { fetchSubscribers } from '../lib/api';
+import { fetchSubscribers } from '../../lib/api';
 
 export default function AdminNewsletter() {
   const [emails, setEmails] = useState<string[]>([]);
