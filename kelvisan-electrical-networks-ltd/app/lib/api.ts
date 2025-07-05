@@ -1,79 +1,91 @@
 // lib/api.ts
-import axios from 'axios';
+// This file provides a utility for making authenticated API requests to the backend.
 
-const BASE_URL = 'http://localhost:5000/api'; // Update for production
+import { getAuthToken, removeAuthToken } from './auth';
 
-// Create an Axios instance
-const api = axios.create({
-  baseURL: BASE_URL,
-  withCredentials: true, // ⬅️ Important for sending cookies (e.g. JWT in HTTP-only cookie)
-});
+// Define your backend API base URL
+// IMPORTANT: This now includes '/api' to match your backend's app.use('/api', ...) setup.
+const API_BASE_URL = 'https://kelvisan-backend.onrender.com/api';
 
-// ------------------ Products API ------------------
+/**
+ * Makes an authenticated API request to the backend.
+ * Automatically adds the Authorization header if a token is available.
+ * Handles common errors like 401 Unauthorized.
+ * @param endpoint The specific API endpoint (e.g., '/products', '/auth/login').
+ * Do NOT include '/api' prefix here, as it's part of API_BASE_URL.
+ * @param options Fetch API options (method, headers, body, etc.).
+ * @returns A Promise that resolves to the JSON response.
+ * @throws An Error if the request fails or returns a non-OK status.
+ */
+export const apiRequest = async <T>(
+  endpoint: string,
+  options?: RequestInit
+): Promise<T> => {
+  const token = getAuthToken();
 
-// Fetch all products
-export async function fetchProducts() {
-  const { data } = await api.get('/products');
-  return data;
-}
+  // Initialize headers as a mutable object (Record<string, string>)
+  const headers: Record<string, string> = {};
 
-// Upload product with image (multipart/form-data)
-export async function uploadProductWithImage(formData: FormData) {
-  const { data } = await api.post('/products', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-  return data;
-}
-
-// Create product without image
-export async function createProduct(product: {
-  name: string;
-  image: string;
-  description: string;
-  price: number;
-}) {
-  const { data } = await api.post('/products', product);
-  return data;
-}
-
-// Update a product
-export async function updateProduct(
-  id: number,
-  product: Partial<{ name: string; image: string; description: string; price: number }>
-) {
-  const { data } = await api.put(`/products/${id}`, product);
-  return data;
-}
-
-// Delete a product
-export async function deleteProduct(id: number) {
-  const { data } = await api.delete(`/products/${id}`);
-  return data;
-}
-
-// ------------------ Newsletter API ------------------
-
-// Fetch newsletter subscribers
-export async function fetchSubscribers() {
-  const { data } = await api.get('/newsletter');
-  return data;
-}
-
-// ------------------ Auth API ------------------
-
-export async function loginAdmin(email: string, password: string) {
-  try {
-    const response = await axios.post(
-      `${BASE_URL}/auth/login`,
-      { email, password },
-      { withCredentials: true } // Important for HTTP-only cookies
-    );
-
-    return { success: true, data: response.data };
-  } catch (error: any) {
-    console.error('Login error:', error.response?.data || error.message);
-    return { success: false, error: error.response?.data?.message || 'Login failed' };
+  // If the request body is JSON, set Content-Type
+  // If it's FormData, the browser will set the correct Content-Type automatically.
+  if (!(options?.body instanceof FormData)) {
+    headers['Content-Type'] = 'application/json';
   }
-}
+
+  // Merge any provided headers from options
+  if (options?.headers) {
+    if (options.headers instanceof Headers) {
+      options.headers.forEach((value, key) => {
+        headers[key] = value;
+      });
+    } else if (Array.isArray(options.headers)) {
+      options.headers.forEach(([key, value]) => {
+        headers[key] = value;
+      });
+    } else {
+      Object.assign(headers, options.headers);
+    }
+  }
+
+  // Add Authorization header if a token exists
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    ...options,
+    headers, // Pass the constructed headers object
+  });
+
+  if (!response.ok) {
+    // Handle specific error codes
+    if (response.status === 401) {
+      // If 401, token might be invalid or expired. Log out the user.
+      removeAuthToken();
+      // Redirect to login page or show a message
+      window.location.href = '/admin/login'; // Example redirect
+      throw new Error('Unauthorized: Please log in again.');
+    }
+
+    // Try to parse error message from response body
+    let errorDetail = response.statusText;
+    try {
+      const errorData = await response.json();
+      if (errorData && errorData.message) {
+        errorDetail = errorData.message;
+      }
+    } catch (err: unknown) { // Use 'unknown' for type safety
+      console.warn('Failed to parse error response as JSON:', err instanceof Error ? err.message : err);
+    }
+    throw new Error(`API request failed: ${response.status} - ${errorDetail}`);
+  }
+
+  // Handle cases where the response might be empty (e.g., DELETE requests)
+  const contentType = response.headers.get('content-type');
+  if (contentType && contentType.includes('application/json')) {
+    return response.json();
+  } else {
+    // Return an empty object or a success message if no JSON content
+    return {} as T;
+  }
+};
