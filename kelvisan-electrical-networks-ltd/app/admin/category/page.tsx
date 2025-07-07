@@ -1,6 +1,6 @@
 // app/admin/categories.tsx
 "use client"
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { apiRequest } from '../../lib/api';
 
 // Re-define Category interface here for self-containment
@@ -13,24 +13,27 @@ interface Category {
 
 const CategoriesPage: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState(false);
+
+  const [showModal, setShowModal] = useState(true); // Initialize to true to show modal first
   const [isEditing, setIsEditing] = useState(false);
   const [currentCategory, setCurrentCategory] = useState<Category>({ name: '', description: '' });
   const [formError, setFormError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+  const [hasAttemptedCategoryFetch, setHasAttemptedCategoryFetch] = useState(false);
 
+
+  // Function to fetch categories (will now only be called manually)
   const fetchCategories = async () => {
     setLoading(true);
     setError(null);
+    setHasAttemptedCategoryFetch(true);
     try {
-      const data = await apiRequest<Category[]>('/categories');
+      // CORRECTED ENDPOINT: Changed to '/category'
+      const data = await apiRequest<Category[]>('/category');
       setCategories(data);
-    } catch (err: unknown) { // Changed 'any' to 'unknown'
+    } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to fetch categories.');
     } finally {
       setLoading(false);
@@ -56,9 +59,10 @@ const CategoriesPage: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        await apiRequest(`/categories/${id}`, { method: 'DELETE' });
+        // CORRECTED ENDPOINT: Changed to '/category'
+        await apiRequest(`/category/${id}`, { method: 'DELETE' });
         fetchCategories(); // Re-fetch categories after deletion
-      } catch (err: unknown) { // Changed 'any' to 'unknown'
+      } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Failed to delete category.');
       } finally {
         setLoading(false);
@@ -78,27 +82,33 @@ const CategoriesPage: React.FC = () => {
     setLoading(true);
     try {
       if (isEditing && currentCategory.id) {
-        await apiRequest<Category>(`/categories/${currentCategory.id}`, {
+        // CORRECTED ENDPOINT: Changed to '/category'
+        await apiRequest<Category>(`/category/${currentCategory.id}`, {
           method: 'PUT',
           body: JSON.stringify(currentCategory),
         });
       } else {
-        await apiRequest<Category>('/categories', {
+        // CORRECTED ENDPOINT: Changed to '/category'
+        await apiRequest<Category>('/category', {
           method: 'POST',
           body: JSON.stringify(currentCategory),
         });
       }
       setShowModal(false);
       fetchCategories(); // Re-fetch categories to update the list
-    } catch (err: unknown) { // Changed 'any' to 'unknown'
+    } catch (err: unknown) {
       setFormError(err instanceof Error ? err.message : 'Failed to save category.');
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) return <div className="text-center py-8">Loading categories...</div>;
-  if (error) return <div className="text-center py-8 text-red-600">Error: {error}</div>;
+  const handleCloseModal = () => {
+    setShowModal(false);
+    if (!hasAttemptedCategoryFetch || (categories.length === 0 && !loading && !error)) {
+      fetchCategories();
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -110,45 +120,54 @@ const CategoriesPage: React.FC = () => {
         Add New Category
       </button>
 
-      {categories.length === 0 ? (
-        <p className="text-gray-600">No categories found. Add one to get started!</p>
-      ) : (
-        <div className="overflow-x-auto bg-white rounded-lg shadow-md">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {categories.map((category) => (
-                <tr key={category.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{category.id}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{category.name}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500">{category.description || 'N/A'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button
-                      onClick={() => handleEditCategory(category)}
-                      className="text-indigo-600 hover:text-indigo-900 mr-4 transition duration-200"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteCategory(category.id!)}
-                      className="text-red-600 hover:text-red-900 transition duration-200"
-                    >
-                      Delete
-                    </button>
-                  </td>
+      {hasAttemptedCategoryFetch ? (
+        loading ? (
+          <div className="text-center py-8 text-gray-600">Loading categories...</div>
+        ) : error ? (
+          <div className="text-center py-8 text-red-600">Error: {error}</div>
+        ) : categories.length === 0 ? (
+          <p className="text-gray-600">No categories found. Click &quot;Add New Category&quot; to get started!</p>
+        ) : (
+          <div className="overflow-x-auto bg-white rounded-lg shadow-md">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {categories.map((category) => (
+                  <tr key={category.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{category.id}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{category.name}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">{category.description || 'N/A'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button
+                        onClick={() => handleEditCategory(category)}
+                        className="text-indigo-600 hover:text-indigo-900 mr-4 transition duration-200"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteCategory(category.id!)}
+                        className="text-red-600 hover:text-red-900 transition duration-200"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )
+      ) : (
+        <p className="text-gray-600">Start by adding your first category!</p>
       )}
+
 
       {/* Category Add/Edit Modal */}
       {showModal && (
@@ -192,7 +211,7 @@ const CategoriesPage: React.FC = () => {
               <div className="flex justify-end gap-4">
                 <button
                   type="button"
-                  onClick={() => setShowModal(false)}
+                  onClick={handleCloseModal}
                   className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition duration-300"
                   disabled={loading}
                 >
