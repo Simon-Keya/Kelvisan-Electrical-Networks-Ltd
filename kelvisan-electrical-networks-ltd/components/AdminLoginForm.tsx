@@ -1,10 +1,10 @@
 // components/AdminLoginForm.tsx
 "use client"
+import Link from 'next/link'; // Import Link for Next.js navigation
 import React, { useState } from 'react';
 
 // Define props for the login form component
 interface AdminLoginFormProps {
-  // Changed signature: now accepts email and password, and returns a Promise
   onLoginSuccess: (email: string, password: string) => Promise<void>;
   onLoginError: (message: string) => void; // Callback for login errors
   isLoading: boolean; // Prop to indicate if login is in progress
@@ -14,57 +14,68 @@ const AdminLoginForm: React.FC<AdminLoginFormProps> = ({ onLoginSuccess, onLogin
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => { // Made handleSubmit async
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim() || !password.trim()) { // Added trim for basic validation
+    if (!email.trim() || !password.trim()) {
       onLoginError('Please enter both email and password.');
       return;
     }
-    // Pass the form data to the parent component's handler
-    // The parent component (login.tsx) will handle the actual API call
-    await onLoginSuccess(email, password); // Await the promise from onLoginSuccess
+    await onLoginSuccess(email, password);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-      <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Admin Login</h2>
-      <div className="mb-4">
-        <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
-          Email:
+    <form onSubmit={handleSubmit} className="bg-white p-10 rounded-xl shadow-2xl max-w-md w-full border border-gray-200">
+      <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-8 tracking-tight">Admin Login</h2>
+      
+      <div className="mb-6">
+        <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">
+          Email Address
         </label>
         <input
           type="email"
           id="email"
-          className="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out"
+          className="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out placeholder-gray-400"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
           disabled={isLoading}
+          placeholder="admin@example.com"
         />
       </div>
-      <div className="mb-6">
-        <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
-          Password:
+      
+      <div className="mb-8">
+        <label htmlFor="password" className="block text-gray-700 text-sm font-semibold mb-2">
+          Password
         </label>
         <input
           type="password"
           id="password"
-          className="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out"
+          className="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out placeholder-gray-400"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
           disabled={isLoading}
+          placeholder="••••••••"
         />
       </div>
-      <div className="flex items-center justify-between">
+      
+      <div className="flex items-center justify-center mb-6">
         <button
           type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 ease-in-out w-full disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-8 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300 ease-in-out w-full disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
           disabled={isLoading}
         >
           {isLoading ? 'Logging In...' : 'Login'}
         </button>
       </div>
+
+      {/* Link to Register Page */}
+      <p className="text-center text-gray-600 text-sm mt-6">
+        Already have an admin account?{' '}
+        <Link href="/admin/login" className="text-blue-600 hover:text-blue-800 font-semibold hover:underline transition duration-200">
+          login 
+        </Link>
+      </p>
     </form>
   );
 };

@@ -1,14 +1,20 @@
 // app/admin/page.tsx
 "use client"; // This component uses client-side features like navigation links
 
-import React from 'react';
-// Assuming you have a way to navigate, e.g., Next.js Link or direct anchor tags
-// For a simple example, we'll use anchor tags. In a Next.js project, you'd use <Link href="...">
-// import Link from 'next/link';
+import { useRouter } from 'next/navigation'; // Import useRouter
+import React, { useEffect } from 'react'; // Import useEffect
+import { isAuthenticated } from '../lib/auth'; // Import isAuthenticated
 
 const AdminDashboardPage: React.FC = () => {
-  // Removed data fetching logic. This page now serves primarily as a navigation hub.
-  // The counts will not be displayed here, as they would require API calls.
+  const router = useRouter();
+
+  // Authentication check: Redirect to login if not authenticated
+  useEffect(() => {
+    // This check runs on the client side after hydration
+    if (!isAuthenticated()) {
+      router.push('/admin/login'); // Redirect to login page
+    }
+  }, [router]); // Re-run effect if router object changes
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -46,7 +52,7 @@ const AdminDashboardPage: React.FC = () => {
           <h2 className="text-3xl font-bold text-gray-800 mb-2">Category Management</h2>
           <p className="text-gray-600 text-base mb-6">Organize your products into logical categories for easy browsing.</p>
           <a
-            href="/admin/categories"
+            href="/admin/category"
             className="inline-flex items-center justify-center bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105"
           >
             Go to Categories
@@ -76,25 +82,7 @@ const AdminDashboardPage: React.FC = () => {
           </a>
         </div>
 
-        {/* Card: Admin Accounts (Register Admin) */}
-        <div className="bg-white rounded-xl shadow-lg p-7 flex flex-col items-center justify-center text-center transition-all duration-300 transform hover:scale-105 hover:shadow-2xl border-b-4 border-yellow-500">
-          <div className="text-yellow-600 text-6xl mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-20 h-20 mx-auto">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.75V10.5m0 0a2.25 2.25 0 00-2.25-2.25H13.5m-3.75 0H7.5m4.5 0h3.75m-3.75 0V3.75m0 0a2.25 2.25 0 012.25-2.25h1.5m-4.5 19.5l-3.75-3.75m4.5-4.5l3.75-3.75M12 18.75V10.5m0 0a2.25 2.25 0 00-2.25-2.25H7.5m0 0v9A2.25 2.25 0 009.75 21h7.5" />
-            </svg>
-          </div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">Admin Accounts</h2>
-          <p className="text-gray-600 text-base mb-6">Create and manage administrative user accounts for the dashboard.</p>
-          <a
-            href="/admin/register"
-            className="inline-flex items-center justify-center bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105"
-          >
-            Register Admin
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 ml-2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-            </svg>
-          </a>
-        </div>
+        {/* Removed Card: Admin Accounts (Register Admin) */}
 
       </div>
     </div>
