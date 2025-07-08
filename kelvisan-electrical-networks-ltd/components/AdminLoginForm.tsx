@@ -71,9 +71,9 @@ const AdminLoginForm: React.FC<AdminLoginFormProps> = ({ onLoginSuccess, onLogin
 
       {/* Link to Register Page */}
       <p className="text-center text-gray-600 text-sm mt-6">
-        Already have an admin account?{' '}
-        <Link href="/admin/login" className="text-blue-600 hover:text-blue-800 font-semibold hover:underline transition duration-200">
-          login 
+        Do not have an admin account?{' '}
+        <Link href="/admin/register" className="text-blue-600 hover:text-blue-800 font-semibold hover:underline transition duration-200">
+          Register 
         </Link>
       </p>
     </form>

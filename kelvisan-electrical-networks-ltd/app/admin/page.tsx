@@ -82,8 +82,6 @@ const AdminDashboardPage: React.FC = () => {
           </a>
         </div>
 
-        {/* Removed Card: Admin Accounts (Register Admin) */}
-
       </div>
     </div>
   );
