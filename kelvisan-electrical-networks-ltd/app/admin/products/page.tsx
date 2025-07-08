@@ -1,6 +1,6 @@
 // app/admin/products/page.tsx
 "use client" // This component uses client-side hooks like useState, etc.
-import React, { useState } from 'react'; // Removed useEffect as initial fetches are no longer here
+import React, { useEffect, useState } from 'react'; // Import useEffect
 import ProductFormModal from '../../../components/ProductFormModal'; // Import the modal component
 import { apiRequest } from '../../lib/api'; // Utility for making API calls
 
@@ -16,33 +16,23 @@ interface Product {
   created_at?: Date; // Optional, read-only from backend
 }
 
-// Category interface is no longer needed directly in this file's state
-// interface Category {
-//   id: number;
-//   name: string;
-// }
-
 const AdminProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  // Removed 'categories' state and 'setCategories' as they are now handled by ProductFormModal internally.
 
   // State to control the visibility and mode of the ProductFormModal
-  const [showProductModal, setShowProductModal] = useState(true); // Initialize to true to show modal first
+  // Initialize to false so the modal does NOT show on initial page load
+  const [showProductModal, setShowProductModal] = useState(false);
   const [isEditingProduct, setIsEditingProduct] = useState(false); // Default to adding new product
   const [productToEdit, setProductToEdit] = useState<Product | undefined>(undefined); // No product selected for edit initially
 
   // States for managing the product list display (loading, error, content)
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [errorProducts, setErrorProducts] = useState<string | null>(null);
-  // This flag ensures the product list is only fetched/displayed after initial modal interaction
-  const [hasAttemptedProductFetch, setHasAttemptedProductFetch] = useState(false);
 
   // Function to fetch products from the backend
-  // This is called after a product is saved, deleted, or when the initial modal is closed.
   const fetchProducts = async () => {
     setLoadingProducts(true);
     setErrorProducts(null);
-    setHasAttemptedProductFetch(true); // Mark that we are now attempting to fetch products
     try {
       const data = await apiRequest<Product[]>('/products');
       setProducts(data);
@@ -52,6 +42,11 @@ const AdminProductsPage: React.FC = () => {
       setLoadingProducts(false);
     }
   };
+
+  // Fetch products on component mount
+  useEffect(() => {
+    fetchProducts();
+  }, []); // Empty dependency array means this runs once on mount
 
   // Handler for opening the "Add New Product" modal
   const handleAddProduct = () => {
@@ -92,86 +87,90 @@ const AdminProductsPage: React.FC = () => {
   // Handler for closing the modal (either by cancel button or successful save)
   const handleCloseModal = () => {
     setShowProductModal(false);
-    // If the modal was closed and we haven't fetched products yet, or if the list is empty,
-    // trigger a fetch now to display the (potentially empty) list.
-    if (!hasAttemptedProductFetch || (products.length === 0 && !loadingProducts && !errorProducts)) {
-      fetchProducts();
-    }
+    // No need to re-fetch here unless you want to ensure data is fresh
+    // even if no save/delete occurred within the modal.
+    // Since fetchProducts is called on save/delete and on mount, this is mostly covered.
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-gray-800 mb-6">Products Management</h1>
+      <h1 className="text-4xl font-extrabold text-gray-800 mb-8 text-center tracking-tight">Products Management</h1>
       <button
         onClick={handleAddProduct}
-        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 mb-6"
+        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 transform hover:scale-105 mb-8"
       >
         Add New Product
       </button>
 
-      {/* Conditional rendering for the product list table */}
-      {hasAttemptedProductFetch ? ( // Only show product list UI if a fetch has been attempted
-        loadingProducts ? (
-          <div className="text-center py-8 text-gray-600">Loading products...</div>
-        ) : errorProducts ? (
-          <div className="text-center py-8 text-red-600">Error loading products: {errorProducts}</div>
-        ) : products.length === 0 ? (
-          <p className="text-gray-600">No products found. Click &quot;Add New Product&quot; to get started!</p>
-        ) : (
-          // Products Table
-          <div className="overflow-x-auto bg-white rounded-lg shadow-md">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {products.map((product) => (
-                  <tr key={product.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{product.id}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{product.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.category_name || 'Uncategorized'}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${product.price.toFixed(2)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button
-                        onClick={() => handleEditProduct(product)}
-                        className="text-indigo-600 hover:text-indigo-900 mr-4 transition duration-200"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDeleteProduct(product.id!)}
-                        className="text-red-600 hover:text-red-900 transition duration-200"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )
+      {loadingProducts ? (
+        <div className="text-center py-12 text-gray-600 text-lg">Loading products...</div>
+      ) : errorProducts ? (
+        <div className="text-center py-12 text-red-600 text-lg font-semibold">Error loading products: {errorProducts}</div>
+      ) : products.length === 0 ? (
+        <p className="text-center text-gray-600 text-lg">No products found. Click &quot;Add New Product&quot; to get started!</p>
       ) : (
-        // Initial state before any product fetch attempt, prompts user to add
-        <p className="text-gray-600">Start by adding your first product!</p>
+        <div className="overflow-x-auto bg-white rounded-xl shadow-lg">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">ID</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Image</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Category</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Price</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {products.map((product) => (
+                <tr key={product.id} className="hover:bg-gray-50 transition-colors duration-150">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{product.id}</td>
+                  <td className="px-6 py-4">
+                    {product.image ? (
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-16 h-16 object-cover rounded-md shadow-sm"
+                        onError={(e) => {
+                          e.currentTarget.src = 'https://placehold.co/64x64/cccccc/333333?text=No+Image';
+                          e.currentTarget.onerror = null; // Prevent infinite loop
+                        }}
+                      />
+                    ) : (
+                      <div className="w-16 h-16 bg-gray-200 rounded-md flex items-center justify-center text-gray-500 text-xs">No Image</div>
+                    )}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-base font-medium text-gray-900">{product.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{product.category_name || 'Uncategorized'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-700">${product.price.toFixed(2)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <button
+                      onClick={() => handleEditProduct(product)}
+                      className="text-indigo-600 hover:text-indigo-900 mr-4 transition duration-200 hover:underline"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteProduct(product.id!)}
+                      className="text-red-600 hover:text-red-900 transition duration-200 hover:underline"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
-
 
       {/* Product Add/Edit Modal Component */}
       <ProductFormModal
         show={showProductModal}
-        onClose={handleCloseModal} // Uses the handler to control modal visibility and trigger product fetch
-        onProductSaved={handleProductSaved} // Callback for successful save
+        onClose={handleCloseModal}
+        onProductSaved={handleProductSaved}
         isEditing={isEditingProduct}
         initialProductData={productToEdit}
-        // The 'categories' prop is explicitly removed as ProductFormModal now fetches its own.
-        // This resolves the TypeScript error: "Property 'categories' does not exist on type 'IntrinsicAttributes & ProductFormModalProps'."
       />
     </div>
   );
