@@ -23,10 +23,8 @@ const PublicProductsPage: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        // Fetch products. This endpoint might not require authentication on the backend.
-        // If your backend's /products endpoint requires authentication,
-        // you'll need a separate public endpoint or handle the 401 gracefully without redirecting.
-        const data = await apiRequest<Product[]>('/products');
+        // Fetch products without sending an Authorization header
+        const data = await apiRequest<Product[]>('/products', { isAuthenticatedRequest: false }); // <--- CRUCIAL CHANGE HERE
         setProducts(data);
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Failed to load products.');

@@ -10,7 +10,7 @@ interface Product {
   name: string;
   image: string; // This will store the URL of the uploaded image
   description: string;
-  price: number;
+  price: number; // Ensure this is treated as a number
   category_id?: number | null; // Optional, can be null if uncategorized
   category_name?: string | null; // For display purposes, typically joined from backend
   created_at?: Date; // Optional, read-only from backend
@@ -20,7 +20,6 @@ const AdminProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
 
   // State to control the visibility and mode of the ProductFormModal
-  // Initialize to false so the modal does NOT show on initial page load
   const [showProductModal, setShowProductModal] = useState(false);
   const [isEditingProduct, setIsEditingProduct] = useState(false); // Default to adding new product
   const [productToEdit, setProductToEdit] = useState<Product | undefined>(undefined); // No product selected for edit initially
@@ -35,7 +34,12 @@ const AdminProductsPage: React.FC = () => {
     setErrorProducts(null);
     try {
       const data = await apiRequest<Product[]>('/products');
-      setProducts(data);
+      // CRUCIAL FIX: Parse price to a number after fetching
+      const parsedProducts = data.map(product => ({
+        ...product,
+        price: parseFloat(product.price as any), // Cast to 'any' to allow parseFloat on string
+      }));
+      setProducts(parsedProducts);
     } catch (err: unknown) {
       setErrorProducts(err instanceof Error ? err.message : 'Failed to fetch products.');
     } finally {
@@ -87,9 +91,6 @@ const AdminProductsPage: React.FC = () => {
   // Handler for closing the modal (either by cancel button or successful save)
   const handleCloseModal = () => {
     setShowProductModal(false);
-    // No need to re-fetch here unless you want to ensure data is fresh
-    // even if no save/delete occurred within the modal.
-    // Since fetchProducts is called on save/delete and on mount, this is mostly covered.
   };
 
   return (
@@ -142,7 +143,8 @@ const AdminProductsPage: React.FC = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-base font-medium text-gray-900">{product.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{product.category_name || 'Uncategorized'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-700">${product.price.toFixed(2)}</td>
+                  {/* Ensure product.price is a number before calling toFixed */}
+                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-700">${(product.price || 0).toFixed(2)}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button
                       onClick={() => handleEditProduct(product)}

@@ -11,6 +11,7 @@ import {
   FaUsers,
 } from 'react-icons/fa';
 import { Hero } from '../components/Hero';
+import Subscribe from '../components/Subscribe'; // Import the Subscribe component
 
 // Animation Variants
 const containerVariant = {
@@ -43,19 +44,19 @@ export default function Homepage() {
   return (
     <main className="bg-gradient-to-b from-white via-gray-50 to-teal-50 text-gray-900 scroll-smooth">
       
-      {/* Hero */}
+      {/* Hero Section */}
       <motion.div variants={containerVariant} initial="hidden" whileInView="visible" viewport={{ once: true }}>
         <Hero />
       </motion.div>
 
       {/* Stats Section */}
-      <section className="pt-24 pb-20 px-6 lg:px-24 bg-gradient-to-b from-gray-100 via-white to-sky-100">
+      <section className="py-16 px-4 lg:px-24 bg-gradient-to-b from-gray-100 via-white to-sky-100">
         <motion.div
           className="max-w-7xl mx-auto"
           variants={containerVariant}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.3 }} // Adjust viewport amount for better trigger
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-16">
             <StatCard value="50+" label="ISP Customers" />
@@ -66,16 +67,16 @@ export default function Homepage() {
         </motion.div>
       </section>
 
-      {/* Focus Areas */}
-      <section className="pt-24 pb-20 px-6 lg:px-24 bg-gradient-to-b from-white via-blue-100 to-white border-t">
+      {/* Focus Areas Section */}
+      <section className="py-16 px-4 lg:px-24 bg-gradient-to-b from-white via-blue-100 to-white border-t border-gray-100">
         <motion.div
           className="max-w-7xl mx-auto"
           variants={containerVariant}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.3 }}
         >
-          <motion.h2 className="text-4xl font-extrabold text-teal-700 text-center mb-4">Core Focus Areas</motion.h2>
+          <motion.h2 className="text-3xl sm:text-4xl font-extrabold text-teal-700 text-center mb-4">Core Focus Areas</motion.h2>
           <motion.p className="text-gray-800 text-center mb-12 max-w-2xl mx-auto text-lg">
             We focus on transforming Kenya’s digital and energy landscapes through seamless service delivery.
           </motion.p>
@@ -88,16 +89,16 @@ export default function Homepage() {
         </motion.div>
       </section>
 
-      {/* Resources */}
-      <section className="py-24 px-6 lg:px-24 bg-gradient-to-b from-white via-gray-50 to-teal-50 border-t">
+      {/* Resources Section */}
+      <section className="py-16 px-4 lg:px-24 bg-gradient-to-b from-white via-gray-50 to-teal-50 border-t border-gray-100">
         <motion.div
           className="max-w-7xl mx-auto"
           variants={containerVariant}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.3 }}
         >
-          <motion.h2 className="text-4xl font-bold text-teal-700 text-center mb-6">Featured Resources</motion.h2>
+          <motion.h2 className="text-3xl sm:text-4xl font-bold text-teal-700 text-center mb-6">Featured Resources</motion.h2>
           <motion.p className="text-gray-700 text-center mb-12 max-w-2xl mx-auto text-lg">
             Stay informed with guides, policy briefs, and tips for network and software success.
           </motion.p>
@@ -141,22 +142,43 @@ export default function Homepage() {
         </motion.div>
       </section>
 
-      {/* Call to Action */}
+      {/* Newsletter Subscription Section */}
+      <section className="py-16 px-4 lg:px-24 bg-gradient-to-br from-blue-50 via-white to-teal-50 border-t border-gray-100">
+        <motion.div
+          className="max-w-7xl mx-auto text-center"
+          variants={containerVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          <motion.h2 className="text-3xl sm:text-4xl font-extrabold text-teal-800 mb-4">
+            Join Our Community
+          </motion.h2>
+          <motion.p className="text-gray-700 text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
+            Subscribe to our newsletter for exclusive updates, insights, and special offers directly in your inbox.
+          </motion.p>
+          <div className="max-w-md mx-auto">
+            <Subscribe /> {/* The Subscribe component */}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Call to Action Section */}
       <motion.section
-        className="relative py-24 px-6 lg:px-32 text-center bg-gradient-to-br from-yellow-100 via-white to-yellow-200 border-t"
+        className="relative py-20 px-4 lg:px-32 text-center bg-gradient-to-br from-yellow-100 via-white to-yellow-200 border-t border-gray-100"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true }}
+        viewport={{ once: true, amount: 0.3 }}
         variants={containerVariant}
       >
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-yellow-400 to-white" />
         <div className="relative z-10">
-          <motion.h3 className="text-4xl font-extrabold text-teal-800 mb-6">Partner with Kelvisan</motion.h3>
+          <motion.h3 className="text-3xl sm:text-4xl font-extrabold text-teal-800 mb-6">Partner with Kelvisan</motion.h3>
           <motion.p className="text-gray-700 text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
             Join us as we transform smart cities, secure networks, and enable innovation in Kenya.
           </motion.p>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-5">
-            <Link href="/contact">
+            <Link href="/contact" passHref>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -165,7 +187,7 @@ export default function Homepage() {
                 Contact Us
               </motion.button>
             </Link>
-            <Link href="/about">
+            <Link href="/about" passHref>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -181,8 +203,7 @@ export default function Homepage() {
   );
 }
 
-// StatCard & HighlightCard definitions remain the same as before.
-// Stat Card
+// Stat Card Component
 function StatCard({ value, label }: { value: string; label: string }) {
   return (
     <motion.div
@@ -196,7 +217,7 @@ function StatCard({ value, label }: { value: string; label: string }) {
   );
 }
 
-// Highlight Card
+// Highlight Card Component
 function HighlightCard({
   icon,
   title,
