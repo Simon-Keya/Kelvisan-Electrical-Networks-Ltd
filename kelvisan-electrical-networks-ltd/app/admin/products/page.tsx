@@ -50,7 +50,7 @@ const AdminProductsPage: React.FC = () => {
   // Fetch products on component mount
   useEffect(() => {
     fetchProducts();
-  }, []); // Empty dependency array means this runs once on mount
+  }, []); 
 
   // Handler for opening the "Add New Product" modal
   const handleAddProduct = () => {
@@ -165,6 +165,7 @@ const AdminProductsPage: React.FC = () => {
           </table>
         </div>
       )}
+
 
       {/* Product Add/Edit Modal Component */}
       <ProductFormModal
