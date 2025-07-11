@@ -159,7 +159,7 @@ export default function Homepage() {
             Subscribe to our newsletter for exclusive updates, insights, and special offers directly in your inbox.
           </motion.p>
           <div className="max-w-md mx-auto">
-            <Subscribe /> {/* The Subscribe component */}
+            <Subscribe /> 
           </div>
         </motion.div>
       </section>
