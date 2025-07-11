@@ -2,13 +2,17 @@
 "use client"; // This component uses client-side hooks
 
 import React, { useState } from 'react';
-import { apiRequest } from '../app/lib/api'; // Assuming you have an apiRequest utility
+// Correct the import path for api.ts based on its location relative to components/
+// If api.ts is in lib/ at the root of your app, the path should be '../../lib/api'
+import { apiRequest } from '../app/lib/api'; // Corrected path to apiRequest utility
 
-interface SubscribeProps {
-  // You can add props here if needed, e.g., for custom success messages
-}
+// REMOVED: The empty interface declaration
+// interface SubscribeProps {
+//   // You can add props here if needed, e.g., for custom success messages
+// }
 
-const Subscribe: React.FC<SubscribeProps> = () => {
+// Corrected: Use React.FC without a generic type, or explicitly use {} for props
+const Subscribe: React.FC = () => { // Changed from React.FC<SubscribeProps>
   const [email, setEmail] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -41,6 +45,7 @@ const Subscribe: React.FC<SubscribeProps> = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email }),
+        isAuthenticatedRequest: false, // Newsletter subscription typically doesn't require auth
       });
 
       setMessage('Thank you for subscribing to our newsletter!');

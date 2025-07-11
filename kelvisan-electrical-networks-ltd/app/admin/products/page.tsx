@@ -1,20 +1,10 @@
 // app/admin/products/page.tsx
 "use client" // This component uses client-side hooks like useState, etc.
-import React, { useEffect, useState } from 'react'; // Import useEffect
+import Image from 'next/image'; // Import Next.js Image component for optimization
+import React, { useEffect, useState } from 'react';
 import ProductFormModal from '../../../components/ProductFormModal'; // Import the modal component
+import { Product } from '../../interfaces/Product'; // <--- IMPORT SHARED PRODUCT INTERFACE
 import { apiRequest } from '../../lib/api'; // Utility for making API calls
-
-// Re-define Product interface for self-containment and clarity
-interface Product {
-  id?: number; // Optional as it might not exist when creating a new product
-  name: string;
-  image: string; // This will store the URL of the uploaded image
-  description: string;
-  price: number; // Ensure this is treated as a number
-  category_id?: number | null; // Optional, can be null if uncategorized
-  category_name?: string | null; // For display purposes, typically joined from backend
-  created_at?: Date; // Optional, read-only from backend
-}
 
 const AdminProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -35,9 +25,12 @@ const AdminProductsPage: React.FC = () => {
     try {
       const data = await apiRequest<Product[]>('/products');
       // CRUCIAL FIX: Parse price to a number after fetching
+      // Map over the data to ensure 'price' is a number for frontend operations (like toFixed)
       const parsedProducts = data.map(product => ({
         ...product,
-        price: parseFloat(product.price as any), // Cast to 'any' to allow parseFloat on string
+        // parseFloat safely converts string to number. If product.price is already a number, it works.
+        // If it's a string like "49.99", it converts it.
+        price: parseFloat(product.price.toString()),
       }));
       setProducts(parsedProducts);
     } catch (err: unknown) {
@@ -50,7 +43,7 @@ const AdminProductsPage: React.FC = () => {
   // Fetch products on component mount
   useEffect(() => {
     fetchProducts();
-  }, []); 
+  }, []); // Empty dependency array means this runs once on mount
 
   // Handler for opening the "Add New Product" modal
   const handleAddProduct = () => {
@@ -128,13 +121,14 @@ const AdminProductsPage: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{product.id}</td>
                   <td className="px-6 py-4">
                     {product.image ? (
-                      <img
+                      <Image // Use Next.js Image component
                         src={product.image}
                         alt={product.name}
-                        className="w-16 h-16 object-cover rounded-md shadow-sm"
+                        width={64} // Corresponds to w-16 (16*4=64px)
+                        height={64} // Corresponds to h-16 (16*4=64px)
+                        className="object-cover rounded-md shadow-sm"
                         onError={(e) => {
-                          e.currentTarget.src = 'https://placehold.co/64x64/cccccc/333333?text=No+Image';
-                          e.currentTarget.onerror = null; // Prevent infinite loop
+                          console.error('Image loading error:', e.currentTarget.src);
                         }}
                       />
                     ) : (
@@ -144,7 +138,7 @@ const AdminProductsPage: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-base font-medium text-gray-900">{product.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{product.category_name || 'Uncategorized'}</td>
                   {/* Ensure product.price is a number before calling toFixed */}
-                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-700">${(product.price || 0).toFixed(2)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-700">${(product.price as number || 0).toFixed(2)}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button
                       onClick={() => handleEditProduct(product)}
@@ -165,7 +159,6 @@ const AdminProductsPage: React.FC = () => {
           </table>
         </div>
       )}
-
 
       {/* Product Add/Edit Modal Component */}
       <ProductFormModal

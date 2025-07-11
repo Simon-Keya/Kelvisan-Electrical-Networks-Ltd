@@ -142,6 +142,7 @@ export default function Homepage() {
         </motion.div>
       </section>
 
+
       {/* Newsletter Subscription Section */}
       <section className="py-16 px-4 lg:px-24 bg-gradient-to-br from-blue-50 via-white to-teal-50 border-t border-gray-100">
         <motion.div

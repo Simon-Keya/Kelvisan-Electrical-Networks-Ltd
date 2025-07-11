@@ -22,6 +22,7 @@ export const setAuthToken = (token: string): void => {
   }
 };
 
+
 /**
  * Retrieves the JWT token from local storage.
  * This function is safe to call in any environment as it checks for window.

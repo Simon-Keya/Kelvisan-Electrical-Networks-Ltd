@@ -1,25 +1,8 @@
 // components/ProductFormModal.tsx
 "use client"
 import React, { useEffect, useState } from 'react';
+import { Category, Product } from '../app/interfaces/Product'; // <--- IMPORT SHARED INTERFACES
 import { apiRequest } from '../app/lib/api'; // Assuming api.ts is in lib/ (path relative to components folder)
-
-// Re-define Product interface for self-containment and clarity
-interface Product {
-  id?: number;
-  name: string;
-  image: string;
-  description: string;
-  price: number | string; // ALLOW price to be string or number when received
-  category_id?: number | null;
-  category_name?: string | null;
-  created_at?: Date;
-}
-
-// Re-define Category interface (needed for the category dropdown in the form)
-interface Category {
-  id: number;
-  name: string;
-}
 
 interface ProductFormModalProps {
   show: boolean; // Controls visibility of the modal
@@ -27,10 +10,6 @@ interface ProductFormModalProps {
   onProductSaved: () => void; // Callback when a product is successfully saved
   isEditing: boolean; // True if editing, false if adding new
   initialProductData?: Product; // Data for product being edited
-  // The categories prop is now received from the parent, but the modal will also fetch its own.
-  // This allows the parent to potentially pass pre-fetched categories if available,
-  // but ensures the modal can function independently if not.
-  categories?: Category[]; // Made optional as modal fetches its own
 }
 
 const ProductFormModal: React.FC<ProductFormModalProps> = ({
@@ -39,7 +18,6 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
   onProductSaved,
   isEditing,
   initialProductData,
-  // categories prop is still accepted, but the modal fetches its own
 }) => {
   const [currentProduct, setCurrentProduct] = useState<Product>({
     name: '',
@@ -64,7 +42,8 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
         setLoadingModalCategories(true);
         setErrorModalCategories(null);
         try {
-          const data = await apiRequest<Category[]>('/category');
+          // Assuming /category endpoint does not require authentication
+          const data = await apiRequest<Category[]>('/category', { isAuthenticatedRequest: false });
           setModalCategories(data); // Set to modal-specific categories state
         } catch (err: unknown) {
           setErrorModalCategories(err instanceof Error ? err.message : 'Failed to load categories for the form.');
@@ -83,7 +62,7 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
         // Parse price to number when setting initial data
         setCurrentProduct({
           ...initialProductData,
-          price: parseFloat(initialProductData.price.toString()),
+          price: parseFloat(initialProductData.price.toString()), // Ensure price is a number for form input
         });
       } else {
         setCurrentProduct({ name: '', image: '', description: '', price: 0, category_id: null });
@@ -99,6 +78,7 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
     setFormError(null);
 
     // Basic client-side validation
+    // Cast currentProduct.price to number for comparison
     if (!currentProduct.name.trim() || !currentProduct.description.trim() || (currentProduct.price as number) <= 0) {
       setFormError('Name, description, and a valid price are required.');
       return;

@@ -2,18 +2,8 @@
 "use client" // This component uses client-side hooks like useState, useEffect
 import Image from 'next/image'; // Import Next.js Image component for optimization
 import React, { useEffect, useState } from 'react';
+import { Product } from '../interfaces/Product'; // <--- IMPORT SHARED PRODUCT INTERFACE
 import { apiRequest } from '../lib/api'; // Utility for making API calls
-
-// Define Product interface
-interface Product {
-  id: number;
-  name: string;
-  image: string; // URL of the product image
-  description: string;
-  price: number | string; // Allow price to be string or number when initially fetched
-  category_name?: string | null; // For display
-  created_at?: Date; // Optional, read-only from backend
-}
 
 const PublicProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
