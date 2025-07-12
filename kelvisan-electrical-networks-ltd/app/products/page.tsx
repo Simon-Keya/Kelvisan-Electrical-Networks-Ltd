@@ -3,28 +3,18 @@
 import Image from 'next/image'; // Import Next.js Image component for optimization
 import Link from 'next/link'; // Import Link for navigation
 import React, { useEffect, useState } from 'react';
+import ProductDetailsModal from '../../components/ProductDetailModal'; // Import the new modal component
 import { Product } from '../interfaces/Product'; // <--- IMPORT SHARED PRODUCT INTERFACE
 import { apiRequest } from '../lib/api'; // Utility for making API calls
 
 // Define a separate ProductCard component to manage its own state for description visibility
 interface ProductCardProps {
   product: Product;
+  onViewDetails: (product: Product) => void; // New prop to handle opening the modal
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const [showDescription, setShowDescription] = useState(false);
+const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => {
   const phoneNumber = "+254711762682"; // Consider making this an environment variable or fetching from config
-
-  const toggleDescription = () => {
-    setShowDescription(!showDescription);
-  };
-
-  // Determine a reasonable fixed height for your description area.
-  // This height should be enough to contain the longest description you expect.
-  // Adjust this value (e.g., `h-[6rem]` or `h-[8rem]`) if your descriptions are longer or shorter.
-  // This ensures the card's height remains constant regardless of description visibility.
-  const DESCRIPTION_AREA_HEIGHT_CLASS = 'h-[6rem]'; // Example: 6rem (approx 96px), adjust as needed.
-                                                  // This will be the fixed height of the description container.
 
   return (
     <div
@@ -47,7 +37,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </div>
       <div className="p-4 flex flex-col flex-grow">
         {/* Product Name - Ensure consistent height for uniformity */}
-        {/* min-h-[3rem] ensures at least two lines of text height */}
         <h2 className="text-xl font-semibold text-gray-800 mb-2 min-h-[3rem] line-clamp-2">
           {product.name}
         </h2>
@@ -57,21 +46,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <span className="text-2xl font-bold text-green-700">Ksh {(product.price as number || 0).toFixed(2)}</span>
         </div>
 
-        {/* Description Container - ALWAYS reserves space with a fixed height */}
-        <div
-          className={`relative transition-opacity duration-300 overflow-hidden ${DESCRIPTION_AREA_HEIGHT_CLASS} mb-3`}
-        >
-          <p className={`text-gray-600 text-sm py-1 absolute inset-0 ${showDescription ? 'opacity-100' : 'opacity-0'}`}>
-            {product.description}
-          </p>
-        </div>
+        {/* Removed the in-card description logic */}
+        {/* Removed spacer div */}
 
-        {/* View Details Button */}
+        {/* View Details Button - now opens the modal */}
         <button
-          onClick={toggleDescription}
+          onClick={() => onViewDetails(product)} // Call the prop function
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition duration-300 transform hover:scale-105 shadow-md mb-4"
         >
-          {showDescription ? 'Hide Details' : 'View Details'}
+          View Details
         </button>
 
         {/* Call to Order Button - Hover effect only on this button */}
@@ -98,6 +81,10 @@ const PublicProductsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // State for the modal
+  const [showProductModal, setShowProductModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
@@ -118,6 +105,16 @@ const PublicProductsPage: React.FC = () => {
 
     fetchProducts();
   }, []); // Empty dependency array means this runs once on component mount
+
+  const handleViewDetails = (product: Product) => {
+    setSelectedProduct(product);
+    setShowProductModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowProductModal(false);
+    setSelectedProduct(null); // Clear selected product when closing
+  };
 
   if (loading) {
     return (
@@ -148,10 +145,17 @@ const PublicProductsPage: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 items-stretch">
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} onViewDetails={handleViewDetails} />
           ))}
         </div>
       )}
+
+      {/* Product Details Modal */}
+      <ProductDetailsModal
+        show={showProductModal}
+        onClose={handleCloseModal}
+        product={selectedProduct}
+      />
     </div>
   );
 };
