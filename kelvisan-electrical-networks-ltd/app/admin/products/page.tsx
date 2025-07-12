@@ -138,7 +138,7 @@ const AdminProductsPage: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-base font-medium text-gray-900">{product.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{product.category_name || 'Uncategorized'}</td>
                   {/* Ensure product.price is a number before calling toFixed */}
-                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-700">Ksh{(product.price as number || 0).toFixed(2)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-700">Ksh.{(product.price as number || 0).toFixed(2)}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button
                       onClick={() => handleEditProduct(product)}

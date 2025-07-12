@@ -49,12 +49,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <span className="text-2xl font-bold text-green-700">Ksh {(product.price as number || 0).toFixed(2)}</span>
         </div>
 
-        {/* Description (conditionally displayed above View Details button) */}
-        {showDescription && (
-          <p className="text-gray-600 text-sm mb-3 animate-fade-in-down">
+        {/* Description Container - Fixed height for layout stability */}
+        {/* We'll use max-h-0 and max-h-[100px] (or similar) for smooth transition without layout shift */}
+        <div className={`transition-all duration-500 ease-in-out overflow-hidden ${showDescription ? 'max-h-[100px] opacity-100 mb-3' : 'max-h-0 opacity-0 mb-0'}`}>
+          <p className="text-gray-600 text-sm">
             {product.description}
           </p>
-        )}
+        </div>
+
 
         {/* View Details Button - now on its own row */}
         <button
@@ -64,8 +66,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {showDescription ? 'Hide Details' : 'View Details'}
         </button>
 
-        {/* Call to Order Button - Hover effect only on button */}
-        <Link href="/contact" passHref className="mt-auto block group"> {/* Added 'group' class here for button-specific hover */}
+        {/* Call to Order Button - Hover effect only on this button */}
+        {/* Moved 'group' class to the Link component to scope the hover effect */}
+        <Link href="/contact" passHref className="mt-auto block group">
           <button
             className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-lg text-sm transition duration-300 transform hover:scale-105 shadow-md relative overflow-hidden"
           >
@@ -126,7 +129,7 @@ const PublicProductsPage: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 sm:py-12 bg-white min-h-screen">
+    <div className="container mx-auto px-4 py-8 sm:py-12 bg-gray-100 min-h-screen"> {/* Changed background to gray-100 */}
       <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-800 mb-8 sm:mb-12 text-center tracking-tight">
         Explore Our Products
       </h1>
