@@ -39,17 +39,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         />
       </div>
       <div className="p-4 flex flex-col flex-grow">
-        {/* Product Name */}
-        <h2 className="text-xl font-semibold text-gray-800 mb-2 line-clamp-2">{product.name}</h2>
+        {/* Product Name - Ensure consistent height for uniformity */}
+        <h2 className="text-xl font-semibold text-gray-800 mb-2 min-h-[3rem] line-clamp-2"> {/* Added min-h-[3rem] (approx. two lines of text) */}
+          {product.name}
+        </h2>
 
         {/* Price */}
-        <div className="mb-2"> {/* Added mb-2 for spacing below price */}
+        <div className="mb-2">
           <span className="text-2xl font-bold text-green-700">Ksh {(product.price as number || 0).toFixed(2)}</span>
         </div>
 
         {/* Description (conditionally displayed above View Details button) */}
         {showDescription && (
-          <p className="text-gray-600 text-sm mb-3 animate-fade-in-down"> {/* Added mb-3 for spacing */}
+          <p className="text-gray-600 text-sm mb-3 animate-fade-in-down">
             {product.description}
           </p>
         )}
@@ -57,7 +59,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         {/* View Details Button - now on its own row */}
         <button
           onClick={toggleDescription}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition duration-300 transform hover:scale-105 shadow-md mb-4" // Added w-full and mb-4
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition duration-300 transform hover:scale-105 shadow-md mb-4"
         >
           {showDescription ? 'Hide Details' : 'View Details'}
         </button>
