@@ -24,7 +24,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       key={product.id}
       className="bg-white rounded-xl shadow-lg overflow-hidden
                  hover:shadow-xl hover:scale-102 transition-all duration-300
-                 border border-gray-100 hover:border-blue-300 flex flex-col group" // Added 'group' class for hover effects
+                 border border-gray-100 hover:border-blue-300 flex flex-col"
     >
       <div className="relative w-full h-48 sm:h-56 overflow-hidden">
         <Image // Using Next.js Image component for optimization
@@ -42,32 +42,35 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         {/* Product Name */}
         <h2 className="text-xl font-semibold text-gray-800 mb-2 line-clamp-2">{product.name}</h2>
 
-        {/* Price and View Details Button */}
-        <div className="flex justify-between items-center mb-3">
-          {/* Ensure product.price is treated as a number for toFixed */}
+        {/* Price */}
+        <div className="mb-2"> {/* Added mb-2 for spacing below price */}
           <span className="text-2xl font-bold text-green-700">Ksh {(product.price as number || 0).toFixed(2)}</span>
-          <button
-            onClick={toggleDescription}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition duration-300 transform hover:scale-105 shadow-md"
-          >
-            {showDescription ? 'Hide Details' : 'View Details'}
-          </button>
         </div>
 
-        {/* Description (conditionally displayed) */}
+        {/* Description (conditionally displayed above View Details button) */}
         {showDescription && (
-          <p className="text-gray-600 text-sm mb-4 animate-fade-in-down">
+          <p className="text-gray-600 text-sm mb-3 animate-fade-in-down"> {/* Added mb-3 for spacing */}
             {product.description}
           </p>
         )}
 
-        {/* Call to Order Button */}
-        <Link href="/contact" passHref className="mt-auto block">
+        {/* View Details Button - now on its own row */}
+        <button
+          onClick={toggleDescription}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition duration-300 transform hover:scale-105 shadow-md mb-4" // Added w-full and mb-4
+        >
+          {showDescription ? 'Hide Details' : 'View Details'}
+        </button>
+
+        {/* Call to Order Button - Hover effect only on button */}
+        <Link href="/contact" passHref className="mt-auto block group"> {/* Added 'group' class here for button-specific hover */}
           <button
             className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-lg text-sm transition duration-300 transform hover:scale-105 shadow-md relative overflow-hidden"
           >
-            <span className="block group-hover:opacity-0 transition-opacity duration-300">Call to Order</span> {/* Changed group-hover:hidden to group-hover:opacity-0 */}
-            <span className="absolute inset-0 flex items-center justify-center bg-teal-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-hover:pointer-events-auto"> {/* Changed hidden to opacity-0 and added pointer-events */}
+            {/* Span for "Call to Order" text - hides on button hover */}
+            <span className="block group-hover:opacity-0 transition-opacity duration-300">Call to Order</span>
+            {/* Span for Phone Number - shows on button hover */}
+            <span className="absolute inset-0 flex items-center justify-center bg-teal-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-hover:pointer-events-auto">
               {phoneNumber}
             </span>
           </button>
