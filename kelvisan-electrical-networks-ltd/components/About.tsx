@@ -8,6 +8,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 import Head from 'next/head';
+import Image from 'next/image'; // Import Next.js Image component
 import Link from 'next/link';
 
 export const About = () => {
@@ -29,6 +30,10 @@ export const About = () => {
           property="og:description"
           content="Discover Kelvinsan Electrical Networks Ltd—your reliable partner for electrical, networking, and software infrastructure projects."
         />
+        {/* For Open Graph images, it's best to use absolute URLs if possible,
+            but for local development, relative paths can work.
+            Next.js Image component is not directly used here as it's for <Head> meta tags.
+            Ensure this image is publicly accessible. */}
         <meta property="og:image" content="/company-team.jpg" />
         <meta property="og:type" content="website" />
       </Head>
@@ -158,12 +163,12 @@ export const About = () => {
 
               {/* CTA Buttons */}
               <div className="mt-6 flex flex-wrap gap-4">
-                <Link href="/contact">
+                <Link href="/contact" passHref>
                   <button className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition duration-300 shadow">
                     Contact Us
                   </button>
                 </Link>
-                <Link href="/services">
+                <Link href="/services" passHref>
                   <button className="bg-white border border-blue-600 text-blue-600 px-6 py-3 rounded hover:bg-blue-50 transition duration-300 shadow">
                     Learn More
                   </button>
@@ -171,12 +176,16 @@ export const About = () => {
               </div>
             </div>
 
-            {/* Image */}
-            <div className="flex-1 overflow-hidden rounded-lg shadow-lg group">
-              <img
+            {/* Image - Replaced <img> with <Image> */}
+            <div className="flex-1 relative h-80 w-full lg:h-auto overflow-hidden rounded-lg shadow-lg group"> {/* Added h-80 for fixed height on smaller screens */}
+              <Image
                 src="/company-team.jpg"
                 alt="Our experienced team in action"
-                className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
+                layout="fill" // Fills the parent div
+                objectFit="cover" // Covers the area, cropping if necessary
+                quality={80} // Optimize image quality
+                priority // Consider making this priority if it's above the fold
+                className="transition-transform duration-500 group-hover:scale-105"
               />
             </div>
           </motion.div>

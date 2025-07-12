@@ -28,9 +28,9 @@ const AdminProductsPage: React.FC = () => {
       // Map over the data to ensure 'price' is a number for frontend operations (like toFixed)
       const parsedProducts = data.map(product => ({
         ...product,
-        // parseFloat safely converts string to number. If product.price is already a number, it works.
-        // If it's a string like "49.99", it converts it.
-        price: parseFloat(product.price.toString()),
+        // Use String() constructor to explicitly convert product.price to a string.
+        // This satisfies the linter by making the type conversion explicit.
+        price: parseFloat(String(product.price)),
       }));
       setProducts(parsedProducts);
     } catch (err: unknown) {

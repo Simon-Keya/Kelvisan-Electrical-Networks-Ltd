@@ -1,3 +1,4 @@
+// components/Service.tsx
 'use client';
 
 import {
@@ -11,6 +12,7 @@ import {
   WrenchScrewdriverIcon,
 } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
+import Image from 'next/image'; // Import Next.js Image component
 import { ServiceCard } from './ServiceCard';
 
 const fadeInUp = {
@@ -159,17 +161,20 @@ export function Services() {
     >
       {/* Background Image */}
       <div className="absolute inset-0 w-full h-full z-0">
-        <img
+        <Image // Changed <img> to <Image>
           src="/service.jpg"
           alt="Kelvinsan service background showing infrastructure and technology"
-          className="w-full h-full object-cover object-center brightness-75"
-          loading="lazy"
+          layout="fill" // Fill the parent div
+          objectFit="cover" // Cover the area, cropping if necessary
+          quality={80} // Optimize image quality
+          priority // Load this image with high priority as it's a background
+          className="brightness-75" // Tailwind CSS filter for brightness
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80" />
       </div>
 
       {/* Section Heading */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 text-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 text-center text-white"> {/* Added text-white for better contrast */}
         <motion.h2
           className="text-4xl sm:text-5xl font-bold mb-6 tracking-tight"
           variants={fadeInUp}

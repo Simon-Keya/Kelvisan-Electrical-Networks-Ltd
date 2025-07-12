@@ -1,7 +1,7 @@
 // components/ProductFormModal.tsx
 "use client"
 import React, { useEffect, useState } from 'react';
-import { Category, Product } from '../app/interfaces/Product'; // <--- IMPORT SHARED INTERFACES
+import { Category, Product } from '../app/interfaces/Product'; // IMPORT SHARED INTERFACES
 import { apiRequest } from '../app/lib/api'; // Assuming api.ts is in lib/ (path relative to components folder)
 
 interface ProductFormModalProps {
@@ -31,7 +31,7 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
   const [formError, setFormError] = useState<string | null>(null); // Errors specific to the form submission
 
   // States for categories within the modal (fetched when modal is shown)
-  const [modalCategories, setModalCategories] = useState<Category[]>([]); // Renamed to avoid conflict
+  const [modalCategories, setModalCategories] = useState<Category[]>([]);
   const [loadingModalCategories, setLoadingModalCategories] = useState(false);
   const [errorModalCategories, setErrorModalCategories] = useState<string | null>(null);
 
@@ -146,8 +146,8 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
   if (!show) return null; // Don't render anything if modal is not visible
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50 p-4">
-      <div className="bg-white p-8 rounded-lg shadow-xl max-w-lg w-full">
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50 p-4 sm:p-6 md:p-8 overflow-y-auto"> {/* Added responsive padding and overflow-y-auto */}
+      <div className="bg-white p-8 rounded-lg shadow-xl max-w-lg w-full my-8 transform scale-95 animate-scale-in"> {/* Added my-8 for vertical margin */}
         <h2 className="text-2xl font-bold text-gray-800 mb-6">
           {isEditing ? 'Edit Product' : 'Add New Product'}
         </h2>
@@ -213,19 +213,34 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
             </div>
             <div className="mb-4">
               <label htmlFor="productPrice" className="block text-gray-700 text-sm font-bold mb-2">
-                Price:
+                Price (Ksh):
               </label>
-              <input
-                type="number"
-                id="productPrice"
-                className="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
-                value={currentProduct.price as number} // Cast for input value
-                onChange={(e) => setCurrentProduct({ ...currentProduct, price: parseFloat(e.target.value) || 0 })}
-                required
-                min="0.01"
-                step="0.01"
-                disabled={formLoading}
-              />
+              <div className="relative flex items-center"> {/* Use flex to align currency and input */}
+                <span className="absolute left-0 pl-3 text-gray-500">Ksh</span> {/* Currency prefix */}
+                <input
+                  type="text" // Changed to text to remove arrows
+                  id="productPrice"
+                  className="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 pl-12" // Increased left padding for currency
+                  value={currentProduct.price.toString()} // Ensure value is a string for text input
+                  onChange={(e) => {
+                    // Allow only numbers and a single decimal point
+                    const rawValue = e.target.value;
+                    const numericValue = rawValue.replace(/[^0-9.]/g, ''); // Remove non-numeric except dot
+                    const parts = numericValue.split('.');
+                    if (parts.length > 2) { // Allow only one decimal point
+                      parts.pop();
+                    }
+                    const finalValue = parts.join('.');
+
+                    setCurrentProduct({ ...currentProduct, price: parseFloat(finalValue) || 0 });
+                  }}
+                  required
+                  pattern="[0-9]+(\.[0-9]{1,2})?" // Basic pattern for numeric input with 0-2 decimal places
+                  inputMode="decimal" // Suggests numeric keyboard on mobile
+                  disabled={formLoading}
+                  placeholder="e.g., 499.99"
+                />
+              </div>
             </div>
             <div className="mb-6">
               <label htmlFor="productCategory" className="block text-gray-700 text-sm font-bold mb-2">
