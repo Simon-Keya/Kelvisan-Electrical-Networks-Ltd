@@ -150,6 +150,10 @@ const sectionData = [
 ];
 
 export function Services() {
+  // Placeholder blurDataURL. Replace this with a real base64-encoded blurred image.
+  // You can generate this from your /public/service.jpg (e.g., a tiny 8x8px blurred version)
+  const blurDataURL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYGD4DwAAAwH+B+H/AAAAAElFTkSuQmCC'; // A tiny, transparent placeholder
+
   return (
     <motion.section
       initial="hidden"
@@ -161,20 +165,22 @@ export function Services() {
     >
       {/* Background Image */}
       <div className="absolute inset-0 w-full h-full z-0">
-        <Image // Changed <img> to <Image>
+        <Image
           src="/service.jpg"
           alt="Kelvinsan service background showing infrastructure and technology"
-          layout="fill" // Fill the parent div
-          objectFit="cover" // Cover the area, cropping if necessary
-          quality={80} // Optimize image quality
+          layout="fill"
+          objectFit="cover"
+          quality={80}
           priority // Load this image with high priority as it's a background
-          className="brightness-75" // Tailwind CSS filter for brightness
+          placeholder="blur" // Enable blur placeholder
+          blurDataURL={blurDataURL} // Provide the blur data URL
+          className="brightness-75"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80" />
       </div>
 
       {/* Section Heading */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 text-center text-white"> {/* Added text-white for better contrast */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 text-center text-white">
         <motion.h2
           className="text-4xl sm:text-5xl font-bold mb-6 tracking-tight"
           variants={fadeInUp}

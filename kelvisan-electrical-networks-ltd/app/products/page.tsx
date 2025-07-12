@@ -22,9 +22,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <div
       key={product.id}
-      className="bg-white rounded-xl shadow-lg overflow-hidden
+      // Removed JavaScript comments from inside the className string
+      className="bg-white rounded-xl shadow-md overflow-hidden
                  hover:shadow-xl hover:scale-102 transition-all duration-300
-                 border border-gray-100 hover:border-blue-300 flex flex-col"
+                 border border-gray-200 hover:border-blue-400 flex flex-col"
     >
       <div className="relative w-full h-48 sm:h-56 overflow-hidden">
         <Image // Using Next.js Image component for optimization
@@ -40,7 +41,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </div>
       <div className="p-4 flex flex-col flex-grow">
         {/* Product Name - Ensure consistent height for uniformity */}
-        <h2 className="text-xl font-semibold text-gray-800 mb-2 min-h-[3rem] line-clamp-2"> {/* Added min-h-[3rem] (approx. two lines of text) */}
+        {/* min-h-[3rem] ensures at least two lines of text height */}
+        <h2 className="text-xl font-semibold text-gray-800 mb-2 min-h-[3rem] line-clamp-2">
           {product.name}
         </h2>
 
@@ -49,13 +51,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <span className="text-2xl font-bold text-green-700">Ksh {(product.price as number || 0).toFixed(2)}</span>
         </div>
 
-        {/* Description Container - Fixed height for layout stability */}
-        {/* We'll use max-h-0 and max-h-[100px] (or similar) for smooth transition without layout shift */}
-        <div className={`transition-all duration-500 ease-in-out overflow-hidden ${showDescription ? 'max-h-[100px] opacity-100 mb-3' : 'max-h-0 opacity-0 mb-0'}`}>
-          <p className="text-gray-600 text-sm">
+        {/* Description Container - Use min-h to reserve space */}
+        {/* The minHeight and maxHeight styles are used for smooth transition without layout shift. */}
+        <div className="relative transition-all duration-500 ease-in-out overflow-hidden"
+             style={{ minHeight: showDescription ? 'auto' : '0px', maxHeight: showDescription ? '150px' : '0px' }}>
+          <p className="text-gray-600 text-sm py-1">
             {product.description}
           </p>
         </div>
+        {/* A spacer div to ensure consistent vertical flow even if description is hidden */}
+        {/* This spacer will have a height equal to the max-height of the description when collapsed */}
+        {!showDescription && <div className="h-[0px] mb-3"></div>}
 
 
         {/* View Details Button - now on its own row */}
@@ -67,7 +73,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </button>
 
         {/* Call to Order Button - Hover effect only on this button */}
-        {/* Moved 'group' class to the Link component to scope the hover effect */}
         <Link href="/contact" passHref className="mt-auto block group">
           <button
             className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-lg text-sm transition duration-300 transform hover:scale-105 shadow-md relative overflow-hidden"
@@ -129,7 +134,7 @@ const PublicProductsPage: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 sm:py-12 bg-gray-100 min-h-screen"> {/* Changed background to gray-100 */}
+    <div className="container mx-auto px-4 py-8 sm:py-12 bg-white min-h-screen"> {/* Changed background back to bg-white */}
       <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-800 mb-8 sm:mb-12 text-center tracking-tight">
         Explore Our Products
       </h1>
@@ -139,7 +144,7 @@ const PublicProductsPage: React.FC = () => {
           No products available at the moment. Please check back later!
         </p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 items-stretch">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} /> // Render ProductCard for each product
           ))}
