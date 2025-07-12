@@ -19,10 +19,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     setShowDescription(!showDescription);
   };
 
-  // Determine a reasonable max height for your descriptions.
-  // This max-height should be enough to contain the longest description you expect.
-  // Adjust this value if your descriptions are longer or shorter.
-  const MAX_DESCRIPTION_HEIGHT_PX = 120; // Example: 120px, adjust as needed
+  // Determine a reasonable fixed height for your description area.
+  // This height should be enough to contain the longest description you expect.
+  // Adjust this value (e.g., `h-[6rem]` or `h-[8rem]`) if your descriptions are longer or shorter.
+  // This ensures the card's height remains constant regardless of description visibility.
+  const DESCRIPTION_AREA_HEIGHT_CLASS = 'h-[6rem]'; // Example: 6rem (approx 96px), adjust as needed.
+                                                  // This will be the fixed height of the description container.
 
   return (
     <div
@@ -55,18 +57,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <span className="text-2xl font-bold text-green-700">Ksh {(product.price as number || 0).toFixed(2)}</span>
         </div>
 
-        {/* Description Container - ALWAYS reserves space */}
-        {/* min-h-[MAX_DESCRIPTION_HEIGHT_PX] ensures the container always takes this height.
-            max-h controls the visible content for the transition. */}
+        {/* Description Container - ALWAYS reserves space with a fixed height */}
         <div
-          className={`transition-all duration-500 ease-in-out overflow-hidden mb-3`}
-          style={{
-            minHeight: `${MAX_DESCRIPTION_HEIGHT_PX}px`, // Always reserve this height
-            maxHeight: showDescription ? `${MAX_DESCRIPTION_HEIGHT_PX}px` : '0px', // Expand/collapse
-            opacity: showDescription ? 1 : 0, // Fade in/out
-          }}
+          className={`relative transition-opacity duration-300 overflow-hidden ${DESCRIPTION_AREA_HEIGHT_CLASS} mb-3`}
         >
-          <p className="text-gray-600 text-sm py-1">
+          <p className={`text-gray-600 text-sm py-1 absolute inset-0 ${showDescription ? 'opacity-100' : 'opacity-0'}`}>
             {product.description}
           </p>
         </div>
