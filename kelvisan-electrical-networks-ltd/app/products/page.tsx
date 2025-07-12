@@ -19,10 +19,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     setShowDescription(!showDescription);
   };
 
+  // Determine a reasonable max height for your descriptions.
+  // You might need to adjust this based on your actual product descriptions.
+  // This max-height should be enough to contain the longest description you expect.
+  const MAX_DESCRIPTION_HEIGHT_PX = 120; // Example: 120px, adjust as needed
+
   return (
     <div
       key={product.id}
-      // Removed JavaScript comments from inside the className string
       className="bg-white rounded-xl shadow-md overflow-hidden
                  hover:shadow-xl hover:scale-102 transition-all duration-300
                  border border-gray-200 hover:border-blue-400 flex flex-col"
@@ -51,17 +55,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <span className="text-2xl font-bold text-green-700">Ksh {(product.price as number || 0).toFixed(2)}</span>
         </div>
 
-        {/* Description Container - Use min-h to reserve space */}
-        {/* The minHeight and maxHeight styles are used for smooth transition without layout shift. */}
-        <div className="relative transition-all duration-500 ease-in-out overflow-hidden"
-             style={{ minHeight: showDescription ? 'auto' : '0px', maxHeight: showDescription ? '150px' : '0px' }}>
+        {/* Description Container - Fixed height for layout stability */}
+        {/* The key here is to always reserve the space (min-h) and then use max-h for the transition.
+            The 'mb-3' is now inside the description container to ensure it's part of the transition. */}
+        <div
+          className={`transition-all duration-500 ease-in-out overflow-hidden ${showDescription ? 'opacity-100' : 'opacity-0'}`}
+          style={{
+            maxHeight: showDescription ? `${MAX_DESCRIPTION_HEIGHT_PX}px` : '0px',
+            minHeight: showDescription ? `${MAX_DESCRIPTION_HEIGHT_PX}px` : '0px', // Set min-height to 0 when collapsed
+            // When not showing, this div will have 0 height, but the spacer below will take its place.
+            // When showing, it will expand up to MAX_DESCRIPTION_HEIGHT_PX.
+          }}
+        >
           <p className="text-gray-600 text-sm py-1">
             {product.description}
           </p>
         </div>
-        {/* A spacer div to ensure consistent vertical flow even if description is hidden */}
-        {/* This spacer will have a height equal to the max-height of the description when collapsed */}
-        {!showDescription && <div className="h-[0px] mb-3"></div>}
+
+        {/* Spacer for description area when collapsed */}
+        {/* This div *always* occupies the space that the description *would* take when expanded.
+            This prevents layout shifts. Adjust h-[Xpx] to match MAX_DESCRIPTION_HEIGHT_PX. */}
+        {!showDescription && <div className={`h-[${MAX_DESCRIPTION_HEIGHT_PX}px] mb-3`}></div>}
 
 
         {/* View Details Button - now on its own row */}
@@ -134,7 +148,7 @@ const PublicProductsPage: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 sm:py-12 bg-white min-h-screen"> {/* Changed background back to bg-white */}
+    <div className="container mx-auto px-4 py-8 sm:py-12 bg-white min-h-screen">
       <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-800 mb-8 sm:mb-12 text-center tracking-tight">
         Explore Our Products
       </h1>
@@ -146,7 +160,7 @@ const PublicProductsPage: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 items-stretch">
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} /> // Render ProductCard for each product
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       )}

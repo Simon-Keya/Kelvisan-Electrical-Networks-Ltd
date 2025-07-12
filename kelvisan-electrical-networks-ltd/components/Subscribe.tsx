@@ -6,13 +6,7 @@ import React, { useState } from 'react';
 // If api.ts is in lib/ at the root of your app, the path should be '../../lib/api'
 import { apiRequest } from '../app/lib/api'; // Corrected path to apiRequest utility
 
-// REMOVED: The empty interface declaration
-// interface SubscribeProps {
-//   // You can add props here if needed, e.g., for custom success messages
-// }
-
-// Corrected: Use React.FC without a generic type, or explicitly use {} for props
-const Subscribe: React.FC = () => { // Changed from React.FC<SubscribeProps>
+const Subscribe: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -38,8 +32,8 @@ const Subscribe: React.FC = () => { // Changed from React.FC<SubscribeProps>
 
     try {
       // Make an API call to your backend's newsletter subscription endpoint
-      // Assuming your backend has a POST /newsletter endpoint that accepts { email: string }
-      await apiRequest('/newsletter', {
+      // CORRECTED: Changed endpoint to '/newsletter/subscribe'
+      await apiRequest('/newsletter/subscribe', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
