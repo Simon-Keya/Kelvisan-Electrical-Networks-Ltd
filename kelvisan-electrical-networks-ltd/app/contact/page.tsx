@@ -4,52 +4,8 @@
 import { motion } from 'framer-motion'; // Import motion for potential page transitions
 import Contact from '../../components/Contact';
 
-// --- SEO Metadata (for Next.js App Router) ---
-export const metadata = {
-  title: 'Contact Us | KELVISAN ELECTRICAL NETWORKS LTD',
-  description: 'Get in touch with KELVISAN ELECTRICAL NETWORKS LTD for inquiries, support, or partnership opportunities. Reach out to our team for expert electrical, IT, and software solutions in Kenya.',
-  keywords: 'contact Kelvisan, Kelvisan support, electrical services contact, IT services contact, software development contact, Kenya tech support, business inquiry, partnership',
-  author: 'Kelvisan Electrical Networks Ltd',
-  openGraph: {
-    title: 'Contact Us - Kelvisan Electrical Networks Ltd',
-    description: 'Connect with KELVISAN ELECTRICAL NETWORKS LTD for all your electrical, IT, and software needs.',
-    url: 'https://kelvisan-electrical-networks-ltd.vercel.app/contact', // Replace with your actual deployed URL
-    siteName: 'KELVISAN ELECTRICAL NETWORKS LTD',
-    images: [
-      {
-        url: 'https://kelvisan-electrical-networks-ltd.vercel.app/og-image-contact.jpg', // Replace with a relevant OG image for contact page
-        width: 1200,
-        height: 630,
-        alt: 'Contact Kelvisan Electrical Networks Ltd',
-      },
-    ],
-    locale: 'en_KE',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Contact Us - Kelvisan Electrical Networks Ltd',
-    description: 'Connect with KELVISAN ELECTRICAL NETWORKS LTD for all your electrical, IT, and software needs.',
-    creator: '@KelvisanElect', // Your Twitter handle
-    images: ['https://kelvisan-electrical-networks-ltd.vercel.app/twitter-image-contact.jpg'], // Replace with a relevant Twitter image for contact page
-  },
-  robots: {
-    index: true,
-    follow: true,
-    nocache: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      noimageindex: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  alternates: {
-    canonical: 'https://kelvisan-electrical-networks-ltd.vercel.app/contact', // Replace with your actual deployed URL
-  },
-};
+// Removed: --- SEO Metadata (for Next.js App Router) ---
+// Removed: export const metadata = { ... };
 
 // Framer Motion variants for page transition (optional, but good for consistency)
 const pageVariants = {

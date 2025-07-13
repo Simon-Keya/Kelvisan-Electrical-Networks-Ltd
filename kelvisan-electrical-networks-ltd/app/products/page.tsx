@@ -5,59 +5,12 @@ import { motion } from 'framer-motion'; // Import motion for animations
 import Image from 'next/image'; // Import Next.js Image component for optimization
 import Link from 'next/link'; // Import Link for navigation
 import React, { useEffect, useState } from 'react';
-import ProductDetailsModal from '../../components/ProductDetailsModal'; // Corrected import name for consistency
+import ProductDetailsModal from '../../components/ProductDetailModal'; // Corrected import name for consistency
 import { Product } from '../interfaces/Product'; // <--- IMPORT SHARED PRODUCT INTERFACE
 import { apiRequest } from '../lib/api'; // Utility for making API calls
 
-// --- SEO Metadata ---
-// This metadata will be used by Next.js to populate the <head> section of your HTML.
-// It's a best practice for SEO in Next.js App Router.
-export const metadata = {
-  title: 'Our Products | KELVISAN ELECTRICAL NETWORKS LTD',
-  description: 'Explore a wide range of high-quality electrical, networking, and software products from KELVISAN ELECTRICAL NETWORKS LTD. Find solutions for your home, business, and industrial needs.',
-  keywords: 'electrical products, networking equipment, software solutions, Kenya, Kelvisan, power backup, smart home, IT hardware',
-  author: 'Kelvisan Electrical Networks Ltd',
-  openGraph: {
-    title: 'Products - Kelvisan Electrical Networks Ltd',
-    description: 'Browse our comprehensive catalog of innovative electrical, networking, and software products.',
-    url: 'https://kelvisan-electrical-networks-ltd.vercel.app/products', // Replace with your actual deployed URL
-    siteName: 'KELVISAN ELECTRICAL NETWORKS LTD',
-    images: [
-      {
-        url: 'https://kelvisan-electrical-networks-ltd.vercel.app/og-image.jpg', // Replace with a relevant OG image
-        width: 1200,
-        height: 630,
-        alt: 'Kelvisan Products',
-      },
-    ],
-    locale: 'en_KE', // Example for Kenya English
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Products - Kelvisan Electrical Networks Ltd',
-    description: 'Browse our comprehensive catalog of innovative electrical, networking, and software products.',
-    creator: '@KelvisanElectricalnNetworks', // Replace with your Twitter handle
-    images: ['https://kelvisan-electrical-networks-ltd.vercel.app/twitter-image.jpg'], // Replace with a relevant Twitter image
-  },
-  robots: {
-    index: true,
-    follow: true,
-    nocache: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      noimageindex: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  // Add canonical URL for SEO
-  alternates: {
-    canonical: 'https://kelvisan-electrical-networks-ltd.vercel.app/products', // Replace with your actual deployed URL
-  },
-};
+// Removed: --- SEO Metadata ---
+// Removed: export const metadata = { ... };
 
 // --- Framer Motion Variants ---
 const containerVariants = {
@@ -88,10 +41,11 @@ const itemVariants = {
 // Define a separate ProductCard component to manage its own state for description visibility
 interface ProductCardProps {
   product: Product;
-  onViewDetails: (product: Product) => void; // New prop to handle opening the modal
+  onViewDetails: (product: Product) => void;
+  isModalOpenForThisProduct: boolean; // New prop: true if this product's modal is currently open
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails, isModalOpenForThisProduct }) => {
   const phoneNumber = "+254711762682"; // Consider making this an environment variable or fetching from config
 
   return (
@@ -134,7 +88,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => 
           onClick={() => onViewDetails(product)} // Call the prop function
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition duration-300 transform hover:scale-105 shadow-md mb-4"
           aria-haspopup="dialog" // Indicates the button opens a dialog
-          aria-expanded={onViewDetails ? 'true' : 'false'} // Reflects modal state
+          aria-expanded={isModalOpenForThisProduct} // Corrected: reflects if *this* product's modal is open
         >
           View Details
         </button>
@@ -247,7 +201,12 @@ const PublicProductsPage: React.FC = () => {
           role="list" // Semantic role for list of products
         >
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} onViewDetails={handleViewDetails} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              onViewDetails={handleViewDetails}
+              isModalOpenForThisProduct={selectedProduct?.id === product.id && showProductModal} // Pass modal state for this specific product
+            />
           ))}
         </motion.div>
       )}
