@@ -1,7 +1,10 @@
+// app/page.tsx
 'use client';
 
 import { motion } from 'framer-motion';
+import Image from 'next/image'; // Import Image for product cards
 import Link from 'next/link';
+import React, { useEffect, useState } from 'react'; // Import useEffect and useState
 import {
   FaBolt,
   FaFileAlt,
@@ -12,6 +15,8 @@ import {
 } from 'react-icons/fa';
 import { Hero } from '../components/Hero';
 import Subscribe from '../components/Subscribe'; // Import the Subscribe component
+import { Product } from './interfaces/Product'; // Import the Product interface
+import { apiRequest } from './lib/api'; // Import the API utility
 
 // Animation Variants
 const containerVariant = {
@@ -40,10 +45,135 @@ const cardVariant = {
   },
 };
 
+// New Component: FeaturedProducts
+const FeaturedProducts: React.FC = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        // Fetch products. You might want to add a limit to the API if your backend supports it,
+        // e.g., '/products?limit=4'. For now, we'll slice on the frontend.
+        const data = await apiRequest<Product[]>('/products', { isAuthenticatedRequest: false });
+        // Parse price to a number after fetching from the backend.
+        const parsedProducts = data.map(product => ({
+          ...product,
+          price: parseFloat(product.price.toString()),
+        }));
+        // Display only the first 4 products
+        setProducts(parsedProducts.slice(0, 4));
+      } catch (err: unknown) {
+        console.error('Error fetching featured products:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load featured products.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-600">Loading featured products...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-8 text-red-600">
+        <p>Error: {error}</p>
+      </div>
+    );
+  }
+
+  return (
+    <motion.section
+      className="py-16 px-4 lg:px-24 bg-gradient-to-b from-white via-gray-50 to-teal-50 border-t border-gray-100"
+      variants={containerVariant}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+    >
+      <div className="max-w-7xl mx-auto">
+        <motion.h2 className="text-3xl sm:text-4xl font-bold text-teal-700 text-center mb-6">
+          Our Featured Products
+        </motion.h2>
+        <motion.p className="text-gray-700 text-center mb-12 max-w-2xl mx-auto text-lg">
+          Discover some of our top-selling electrical, networking, and software products.
+        </motion.p>
+
+        {products.length === 0 ? (
+          <p className="text-center text-gray-600 text-lg py-10">
+            No featured products available at the moment.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {products.map((product, i) => (
+              <motion.div
+                key={product.id}
+                variants={cardVariant}
+                className="bg-white rounded-xl shadow-md overflow-hidden
+                           hover:shadow-xl hover:scale-102 transition-all duration-300
+                           border border-gray-200 hover:border-blue-400 flex flex-col"
+              >
+                <div className="relative w-full h-48 overflow-hidden">
+                  <Image
+                    src={product.image || 'https://placehold.co/400x300/e0e0e0/ffffff?text=No+Image'}
+                    alt={product.name}
+                    layout="fill"
+                    objectFit="cover"
+                    className="transition-transform duration-300 hover:scale-105"
+                  />
+                </div>
+                <div className="p-4 flex flex-col flex-grow">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2 line-clamp-2 min-h-[3rem]">
+                    {product.name}
+                  </h3>
+                  <div className="mb-2">
+                    <span className="text-2xl font-bold text-green-700">Ksh {(product.price as number || 0).toFixed(2)}</span>
+                  </div>
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
+                    {product.description}
+                  </p>
+                  <Link href={`/products`} passHref className="mt-auto block">
+                    <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition duration-300 transform hover:scale-105 shadow-md">
+                      View Product
+                    </button>
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
+
+        <div className="text-center mt-12">
+          <Link href="/products" passHref>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-full shadow-lg transition duration-300"
+            >
+              View All Products
+            </motion.button>
+          </Link>
+        </div>
+      </div>
+    </motion.section>
+  );
+};
+
+
 export default function Homepage() {
   return (
     <main className="bg-gradient-to-b from-white via-gray-50 to-teal-50 text-gray-900 scroll-smooth">
-      
+
       {/* Hero Section */}
       <motion.div variants={containerVariant} initial="hidden" whileInView="visible" viewport={{ once: true }}>
         <Hero />
@@ -89,59 +219,8 @@ export default function Homepage() {
         </motion.div>
       </section>
 
-      {/* Resources Section */}
-      <section className="py-16 px-4 lg:px-24 bg-gradient-to-b from-white via-gray-50 to-teal-50 border-t border-gray-100">
-        <motion.div
-          className="max-w-7xl mx-auto"
-          variants={containerVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <motion.h2 className="text-3xl sm:text-4xl font-bold text-teal-700 text-center mb-6">Featured Resources</motion.h2>
-          <motion.p className="text-gray-700 text-center mb-12 max-w-2xl mx-auto text-lg">
-            Stay informed with guides, policy briefs, and tips for network and software success.
-          </motion.p>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                title: 'Software Installation Guide',
-                description: 'Step-by-step software deployment walkthroughs.',
-                link: '/resources',
-                icon: <FaLaptopCode />,
-              },
-              {
-                title: 'ICT Policy Briefs',
-                description: 'Governance and tech strategy simplified.',
-                link: '/resources',
-                icon: <FaFileAlt />,
-              },
-              {
-                title: 'Network Optimization Tips',
-                description: 'Maximize uptime and reliability.',
-                link: '/resources',
-                icon: <FaNetworkWired />,
-              },
-            ].map((res, i) => (
-              <motion.div
-                key={i}
-                variants={cardVariant}
-                className="p-6 bg-white rounded-xl border hover:border-teal-400 shadow-sm hover:shadow-lg transition-all duration-300"
-                whileHover={{ scale: 1.04 }}
-              >
-                <div className="text-blue-600 text-3xl mb-4">{res.icon}</div>
-                <h3 className="text-xl font-semibold text-teal-700 mb-2">{res.title}</h3>
-                <p className="text-gray-600 mb-4">{res.description}</p>
-                <Link href={res.link} className="text-sm text-blue-700 hover:underline font-medium">
-                  View Resource →
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      </section>
-
+      {/* NEW: Featured Products Section */}
+      <FeaturedProducts />
 
       {/* Newsletter Subscription Section */}
       <section className="py-16 px-4 lg:px-24 bg-gradient-to-br from-blue-50 via-white to-teal-50 border-t border-gray-100">
@@ -159,7 +238,7 @@ export default function Homepage() {
             Subscribe to our newsletter for exclusive updates, insights, and special offers directly in your inbox.
           </motion.p>
           <div className="max-w-md mx-auto">
-            <Subscribe /> 
+            <Subscribe />
           </div>
         </motion.div>
       </section>
