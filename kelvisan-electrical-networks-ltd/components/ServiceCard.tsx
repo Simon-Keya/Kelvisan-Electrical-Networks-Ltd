@@ -1,6 +1,8 @@
+// components/ServiceCard.tsx
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
+import Image from 'next/image'; // Import Next.js Image component
 import { ReactNode, useState } from 'react';
 
 interface ServiceCardProps {
@@ -18,10 +20,16 @@ export const ServiceCard = ({ title, description, details, image, icon }: Servic
     <div className="relative group rounded-2xl overflow-hidden shadow-md bg-white dark:bg-gray-900 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl border border-gray-200 dark:border-gray-800">
       {/* Image Section */}
       <div className="relative h-44 w-full overflow-hidden">
-        <img
+        <Image // Changed <img> to <Image>
           src={image}
           alt={title}
-          className="w-full h-full object-cover object-center transition-transform duration-500 ease-in-out group-hover:scale-105"
+          layout="fill" // Fill the parent div
+          objectFit="cover" // Cover the area, cropping if necessary
+          quality={75} // Optimize image quality (e.g., 75)
+          className="transition-transform duration-500 ease-in-out group-hover:scale-105"
+          // Optional: Add a placeholder for better loading experience
+          // placeholder="blur"
+          // blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYGD4DwAAAwH+B+H/AAAAAElFTkSuQmCC"
         />
         <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition duration-300" />
       </div>

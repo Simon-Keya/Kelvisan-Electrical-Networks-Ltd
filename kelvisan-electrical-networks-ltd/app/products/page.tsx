@@ -1,11 +1,89 @@
 // app/products/page.tsx
-"use client" // This component uses client-side hooks like useState, useEffect
+"use client"; // This component uses client-side hooks like useState, useEffect
+
+import { motion } from 'framer-motion'; // Import motion for animations
 import Image from 'next/image'; // Import Next.js Image component for optimization
 import Link from 'next/link'; // Import Link for navigation
 import React, { useEffect, useState } from 'react';
-import ProductDetailsModal from '../../components/ProductDetailModal'; // Import the new modal component
+import ProductDetailsModal from '../../components/ProductDetailsModal'; // Corrected import name for consistency
 import { Product } from '../interfaces/Product'; // <--- IMPORT SHARED PRODUCT INTERFACE
 import { apiRequest } from '../lib/api'; // Utility for making API calls
+
+// --- SEO Metadata ---
+// This metadata will be used by Next.js to populate the <head> section of your HTML.
+// It's a best practice for SEO in Next.js App Router.
+export const metadata = {
+  title: 'Our Products | KELVISAN ELECTRICAL NETWORKS LTD',
+  description: 'Explore a wide range of high-quality electrical, networking, and software products from KELVISAN ELECTRICAL NETWORKS LTD. Find solutions for your home, business, and industrial needs.',
+  keywords: 'electrical products, networking equipment, software solutions, Kenya, Kelvisan, power backup, smart home, IT hardware',
+  author: 'Kelvisan Electrical Networks Ltd',
+  openGraph: {
+    title: 'Products - Kelvisan Electrical Networks Ltd',
+    description: 'Browse our comprehensive catalog of innovative electrical, networking, and software products.',
+    url: 'https://kelvisan-electrical-networks-ltd.vercel.app/products', // Replace with your actual deployed URL
+    siteName: 'KELVISAN ELECTRICAL NETWORKS LTD',
+    images: [
+      {
+        url: 'https://kelvisan-electrical-networks-ltd.vercel.app/og-image.jpg', // Replace with a relevant OG image
+        width: 1200,
+        height: 630,
+        alt: 'Kelvisan Products',
+      },
+    ],
+    locale: 'en_KE', // Example for Kenya English
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Products - Kelvisan Electrical Networks Ltd',
+    description: 'Browse our comprehensive catalog of innovative electrical, networking, and software products.',
+    creator: '@KelvisanElectricalnNetworks', // Replace with your Twitter handle
+    images: ['https://kelvisan-electrical-networks-ltd.vercel.app/twitter-image.jpg'], // Replace with a relevant Twitter image
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  // Add canonical URL for SEO
+  alternates: {
+    canonical: 'https://kelvisan-electrical-networks-ltd.vercel.app/products', // Replace with your actual deployed URL
+  },
+};
+
+// --- Framer Motion Variants ---
+const containerVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      staggerChildren: 0.1, // Delay between child animations
+      delayChildren: 0.2, // Delay before children start animating
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 10
+    }
+  },
+};
 
 // Define a separate ProductCard component to manage its own state for description visibility
 interface ProductCardProps {
@@ -17,22 +95,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => 
   const phoneNumber = "+254711762682"; // Consider making this an environment variable or fetching from config
 
   return (
-    <div
-      key={product.id}
+    <motion.div // Apply motion to the card for animation
+      variants={itemVariants} // Use itemVariants for individual card animation
       className="bg-white rounded-xl shadow-md overflow-hidden
                  hover:shadow-xl hover:scale-102 transition-all duration-300
                  border border-gray-200 hover:border-blue-400 flex flex-col"
+      tabIndex={0} // Make card focusable for accessibility
+      role="listitem" // Semantic role for list items
+      aria-label={`Product: ${product.name}`} // Aria label for screen readers
     >
       <div className="relative w-full h-48 sm:h-56 overflow-hidden">
         <Image // Using Next.js Image component for optimization
           src={product.image || 'https://placehold.co/400x300/e0e0e0/ffffff?text=No+Image'}
-          alt={product.name}
+          alt={`Image of ${product.name}`} // Descriptive alt text for SEO and accessibility
           layout="fill" // Fills the parent div
           objectFit="cover" // Covers the area, cropping if necessary
           className="transition-transform duration-300 hover:scale-105"
           onError={(e) => {
             console.error('Image loading error for product:', product.name, e.currentTarget.src);
           }}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Responsive image sizing
+          priority // Consider if these images are above the fold
         />
       </div>
       <div className="p-4 flex flex-col flex-grow">
@@ -46,13 +129,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => 
           <span className="text-2xl font-bold text-green-700">Ksh {(product.price as number || 0).toFixed(2)}</span>
         </div>
 
-        {/* Removed the in-card description logic */}
-        {/* Removed spacer div */}
-
         {/* View Details Button - now opens the modal */}
         <button
           onClick={() => onViewDetails(product)} // Call the prop function
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition duration-300 transform hover:scale-105 shadow-md mb-4"
+          aria-haspopup="dialog" // Indicates the button opens a dialog
+          aria-expanded={onViewDetails ? 'true' : 'false'} // Reflects modal state
         >
           View Details
         </button>
@@ -61,6 +143,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => 
         <Link href="/contact" passHref className="mt-auto block group">
           <button
             className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-lg text-sm transition duration-300 transform hover:scale-105 shadow-md relative overflow-hidden"
+            aria-label={`Call to order ${product.name}`} // Aria label for accessibility
           >
             {/* Span for "Call to Order" text - hides on button hover */}
             <span className="block group-hover:opacity-0 transition-opacity duration-300">Call to Order</span>
@@ -71,7 +154,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => 
           </button>
         </Link>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -133,21 +216,40 @@ const PublicProductsPage: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 sm:py-12 bg-white min-h-screen">
-      <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-800 mb-8 sm:mb-12 text-center tracking-tight">
+    <main className="container mx-auto px-4 py-8 sm:py-12 bg-white min-h-screen" role="main"> {/* Use main for semantic HTML */}
+      <motion.h1
+        className="text-4xl sm:text-5xl font-extrabold text-gray-800 mb-8 sm:mb-12 text-center tracking-tight"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
         Explore Our Products
-      </h1>
+      </motion.h1>
 
       {products.length === 0 ? (
-        <p className="text-center text-gray-600 text-lg py-10">
+        <motion.p
+          className="text-center text-gray-600 text-lg py-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
           No products available at the moment. Please check back later!
-        </p>
+        </motion.p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 items-stretch">
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 items-stretch"
+          variants={containerVariants} // Apply container variants to the grid
+          initial="hidden"
+          animate="visible" // Animate on mount
+          // Consider using whileInView if you want animation to trigger on scroll
+          // whileInView="visible"
+          // viewport={{ once: true, amount: 0.2 }}
+          role="list" // Semantic role for list of products
+        >
           {products.map((product) => (
             <ProductCard key={product.id} product={product} onViewDetails={handleViewDetails} />
           ))}
-        </div>
+        </motion.div>
       )}
 
       {/* Product Details Modal */}
@@ -156,7 +258,7 @@ const PublicProductsPage: React.FC = () => {
         onClose={handleCloseModal}
         product={selectedProduct}
       />
-    </div>
+    </main>
   );
 };
 
