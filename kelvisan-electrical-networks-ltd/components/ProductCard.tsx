@@ -64,12 +64,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails, isMod
         <div className="mb-2">
           <span className="text-2xl font-bold text-green-700">Ksh {(product.price as number || 0).toFixed(2)}</span>
         </div>
-
-        {/* Description is now always shown, but clamped for consistency */}
-        <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
-          {product.description}
-        </p>
-
         {/* Conditional rendering for the "View Details" button behavior */}
         {onViewDetails ? (
           <button
