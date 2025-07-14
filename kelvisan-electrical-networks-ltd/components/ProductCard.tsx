@@ -1,24 +1,111 @@
-'use client'
+// components/ProductCard.tsx
+"use client"; // This component uses client-side hooks like useState
+import { motion } from 'framer-motion';
+import Image from 'next/image';
 import Link from 'next/link';
+import React from 'react';
+import { Product } from '../app/interfaces/Product'; // Adjust path based on your project structure
 
-export interface Product {
-  id: number;
-  name: string;
-  description: string;
-  specs: string;
-  price: number;
+interface ProductCardProps {
+  product: Product;
+  // Make onViewDetails optional. If provided, it triggers a modal.
+  // If not, the button will link to the general products page.
+  onViewDetails?: (product: Product) => void;
+  // isModalOpenForThisProduct is only relevant when onViewDetails is provided
+  isModalOpenForThisProduct?: boolean;
 }
 
-export default function ProductCard({ product }: { product: Product }) {
+// Framer Motion variant for individual card animation
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 10
+    }
+  },
+};
+
+const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails, isModalOpenForThisProduct }) => {
+  const phoneNumber = "+254711762682"; // Consider making this an environment variable or fetching from config
+
   return (
-    <div className="border rounded-lg shadow hover:shadow-md p-4 bg-white">
-      <h2 className="font-semibold text-xl mb-2">{product.name}</h2>
-      <p className="text-gray-700 mb-2">{product.description}</p>
-      <p className="text-sm whitespace-pre-wrap mb-2">{product.specs}</p>
-      <p className="font-semibold mb-4">${product.price.toFixed(2)}</p>
-      <Link href="/contact" className="btn btn-primary">
-        Order Enquiry
-      </Link>
-    </div>
+    <motion.div
+      variants={itemVariants} // Apply motion to the card for animation
+      className="bg-white rounded-xl shadow-md overflow-hidden
+                 hover:shadow-xl hover:scale-102 transition-all duration-300
+                 border border-gray-200 hover:border-blue-400 flex flex-col"
+      tabIndex={0}
+      role="listitem"
+      aria-label={`Product: ${product.name}`}
+    >
+      <div className="relative w-full h-48 sm:h-56 overflow-hidden">
+        <Image
+          src={product.image || 'https://placehold.co/400x300/e0e0e0/ffffff?text=No+Image'}
+          alt={`Image of ${product.name}`}
+          layout="fill"
+          objectFit="cover"
+          className="transition-transform duration-300 hover:scale-105"
+          onError={(e) => {
+            console.error('Image loading error for product:', product.name, e.currentTarget.src);
+          }}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          priority={onViewDetails ? true : false} // Priority if it's on the main products page (likely above fold)
+        />
+      </div>
+      <div className="p-4 flex flex-col flex-grow">
+        <h2 className="text-xl font-semibold text-gray-800 mb-2 min-h-[3rem] line-clamp-2">
+          {product.name}
+        </h2>
+
+        <div className="mb-2">
+          <span className="text-2xl font-bold text-green-700">Ksh {(product.price as number || 0).toFixed(2)}</span>
+        </div>
+
+        {/* Description is now always shown, but clamped for consistency */}
+        <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
+          {product.description}
+        </p>
+
+        {/* Conditional rendering for the "View Details" button behavior */}
+        {onViewDetails ? (
+          <button
+            onClick={() => onViewDetails(product)}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition duration-300 transform hover:scale-105 shadow-md mb-4"
+            aria-haspopup="dialog"
+            aria-expanded={isModalOpenForThisProduct}
+          >
+            View Details
+          </button>
+        ) : (
+          <Link href={`/products`} passHref className="block mb-4"> {/* Link to general products page */}
+            <button
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition duration-300 transform hover:scale-105 shadow-md"
+              aria-label={`View product details for ${product.name}`}
+            >
+              View Product
+            </button>
+          </Link>
+        )}
+
+        {/* Call to Order Button */}
+        <Link href="/contact" passHref className="mt-auto block group">
+          <button
+            className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-lg text-sm transition duration-300 transform hover:scale-105 shadow-md relative overflow-hidden"
+            aria-label={`Call to order ${product.name}`}
+          >
+            <span className="block group-hover:opacity-0 transition-opacity duration-300">Call to Order</span>
+            <span className="absolute inset-0 flex items-center justify-center bg-teal-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-hover:pointer-events-auto">
+              {phoneNumber}
+            </span>
+          </button>
+        </Link>
+      </div>
+    </motion.div>
   );
-}
+};
+
+export default ProductCard;

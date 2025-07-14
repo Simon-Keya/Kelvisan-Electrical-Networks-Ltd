@@ -2,9 +2,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Image from 'next/image'; // Import Image for product cards
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react'; // Import useEffect and useState
+import React, { useEffect, useState } from 'react';
 import {
   FaBolt,
   FaNetworkWired,
@@ -12,14 +11,12 @@ import {
   FaUsers,
 } from 'react-icons/fa';
 import { Hero } from '../components/Hero';
-import Subscribe from '../components/Subscribe'; // Import the Subscribe component
-import { Product } from './interfaces/Product'; // Import the Product interface
-import { apiRequest } from './lib/api'; // Import the API utility
+import ProductCard from '../components/ProductCard'; // Import the shared ProductCard
+import Subscribe from '../components/Subscribe';
+import { Product } from './interfaces/Product';
+import { apiRequest } from './lib/api';
 
-// Removed: --- SEO Metadata (for Next.js App Router) ---
-// Removed: export const metadata = { ... };
-
-// Animation Variants
+// Animation Variants for sections (containerVariant)
 const containerVariant = {
   hidden: { opacity: 0, y: 40 },
   visible: {
@@ -33,6 +30,8 @@ const containerVariant = {
   },
 };
 
+// Re-define cardVariant for StatCard and HighlightCard components ONLY in this file
+// The ProductCard component has its own internal itemVariants now.
 const cardVariant = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -57,16 +56,12 @@ const FeaturedProducts: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        // Fetch products. You might want to add a limit to the API if your backend supports it,
-        // e.g., '/products?limit=4'. For now, we'll slice on the frontend.
         const data = await apiRequest<Product[]>('/products', { isAuthenticatedRequest: false });
-        // Parse price to a number after fetching from the backend.
         const parsedProducts = data.map(product => ({
           ...product,
           price: parseFloat(product.price.toString()),
         }));
-        // Display only the first 4 products
-        setProducts(parsedProducts.slice(0, 4));
+        setProducts(parsedProducts.slice(0, 4)); // Display only the first 4 products
       } catch (err: unknown) {
         console.error('Error fetching featured products:', err);
         setError(err instanceof Error ? err.message : 'Failed to load featured products.');
@@ -116,49 +111,14 @@ const FeaturedProducts: React.FC = () => {
             No featured products available at the moment.
           </p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8" role="list"> {/* Semantic role */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8" role="list">
             {products.map((product) => (
-              <motion.div
+              <ProductCard
                 key={product.id}
-                variants={cardVariant}
-                className="bg-white rounded-xl shadow-md overflow-hidden
-                           hover:shadow-xl hover:scale-102 transition-all duration-300
-                           border border-gray-200 hover:border-blue-400 flex flex-col"
-                role="listitem" // Semantic role
-                tabIndex={0} // Make card focusable
-                aria-label={`Featured Product: ${product.name}`} // Accessibility
-              >
-                <div className="relative w-full h-48 overflow-hidden">
-                  <Image
-                    src={product.image || 'https://placehold.co/400x300/e0e0e0/ffffff?text=No+Image'}
-                    alt={`Image of ${product.name}`} // Descriptive alt text
-                    layout="fill"
-                    objectFit="cover"
-                    className="transition-transform duration-300 hover:scale-105"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" // Better sizes for responsive images
-                    priority={false} // Not above the fold, so not priority
-                  />
-                </div>
-                <div className="p-4 flex flex-col flex-grow">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2 line-clamp-2 min-h-[3rem]">
-                    {product.name}
-                  </h3>
-                  <div className="mb-2">
-                    <span className="text-2xl font-bold text-green-700">Ksh {(product.price as number || 0).toFixed(2)}</span>
-                  </div>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
-                    {product.description}
-                  </p>
-                  <Link href={`/products`} passHref className="mt-auto block">
-                    <button
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition duration-300 transform hover:scale-105 shadow-md"
-                      aria-label={`View details for ${product.name}`} // Accessibility
-                    >
-                      View Product
-                    </button>
-                  </Link>
-                </div>
-              </motion.div>
+                product={product}
+                // No onViewDetails or isModalOpenForThisProduct props needed here,
+                // so the ProductCard's internal logic will make the button link to /products.
+              />
             ))}
           </div>
         )}
@@ -183,7 +143,7 @@ const FeaturedProducts: React.FC = () => {
 
 export default function Homepage() {
   return (
-    <main className="bg-gradient-to-b from-white via-gray-50 to-teal-50 text-gray-900 scroll-smooth" role="main"> {/* Semantic role */}
+    <main className="bg-gradient-to-b from-white via-gray-50 to-teal-50 text-gray-900 scroll-smooth" role="main">
 
       {/* Hero Section */}
       <motion.div variants={containerVariant} initial="hidden" whileInView="visible" viewport={{ once: true }}>
@@ -302,11 +262,11 @@ export default function Homepage() {
 function StatCard({ value, label }: { value: string; label: string }) {
   return (
     <motion.div
-      variants={cardVariant}
+      variants={cardVariant} // This cardVariant is now correctly defined above
       className="p-6 bg-white rounded-xl shadow-md hover:shadow-xl border border-blue-100 text-center transition-transform duration-300 hover:-translate-y-1"
       whileHover={{ scale: 1.05 }}
-      role="listitem" // Semantic role
-      aria-label={`${value} ${label}`} // Accessibility
+      role="listitem"
+      aria-label={`${value} ${label}`}
     >
       <div className="text-4xl font-bold text-teal-800">{value}</div>
       <div className="text-sm text-gray-700 mt-1">{label}</div>
@@ -328,13 +288,13 @@ function HighlightCard({
 }) {
   return (
     <motion.div
-      variants={cardVariant}
+      variants={cardVariant} // This cardVariant is now correctly defined above
       className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 border border-gray-200 hover:border-teal-400"
       whileHover={{ scale: 1.03 }}
-      role="listitem" // Semantic role
-      aria-label={`Highlight: ${title}`} // Accessibility
+      role="listitem"
+      aria-label={`Highlight: ${title}`}
     >
-      <div className="mb-3" aria-hidden="true">{icon}</div> {/* Icon is decorative, hide from screen readers */}
+      <div className="mb-3" aria-hidden="true">{icon}</div>
       <h3 className="text-lg font-semibold text-teal-700 mb-1">{title}</h3>
       <p className="text-gray-600 text-sm mb-3">{description}</p>
       <Link href={link} className="text-sm text-blue-700 hover:underline font-medium" aria-label={`Learn more about ${title}`}>
