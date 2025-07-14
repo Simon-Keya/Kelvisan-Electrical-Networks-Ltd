@@ -12,6 +12,7 @@ import {
 } from 'react-icons/fa';
 import { Hero } from '../components/Hero';
 import ProductCard from '../components/ProductCard'; // Import the shared ProductCard
+import ProductDetailsModal from '../components/ProductDetailModal'; // Import the ProductDetailsModal
 import Subscribe from '../components/Subscribe';
 import { Product } from './interfaces/Product';
 import { apiRequest } from './lib/api';
@@ -51,6 +52,10 @@ const FeaturedProducts: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // State for the modal within FeaturedProducts
+  const [showProductModal, setShowProductModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
@@ -72,6 +77,17 @@ const FeaturedProducts: React.FC = () => {
 
     fetchProducts();
   }, []);
+
+  // Handlers for the modal
+  const handleViewDetails = (product: Product) => {
+    setSelectedProduct(product);
+    setShowProductModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowProductModal(false);
+    setSelectedProduct(null); // Clear selected product when closing
+  };
 
   if (loading) {
     return (
@@ -116,8 +132,8 @@ const FeaturedProducts: React.FC = () => {
               <ProductCard
                 key={product.id}
                 product={product}
-                // No onViewDetails or isModalOpenForThisProduct props needed here,
-                // so the ProductCard's internal logic will make the button link to /products.
+                onViewDetails={handleViewDetails} // Pass the handler to open the modal
+                isModalOpenForThisProduct={selectedProduct?.id === product.id && showProductModal} // Pass modal state
               />
             ))}
           </div>
@@ -136,6 +152,13 @@ const FeaturedProducts: React.FC = () => {
           </Link>
         </div>
       </div>
+
+      {/* Product Details Modal for Featured Products */}
+      <ProductDetailsModal
+        show={showProductModal}
+        onClose={handleCloseModal}
+        product={selectedProduct}
+      />
     </motion.section>
   );
 };
@@ -160,7 +183,7 @@ export default function Homepage() {
           viewport={{ once: true, amount: 0.3 }} // Adjust viewport amount for better trigger
         >
           <h2 id="stats-heading" className="sr-only">Company Statistics</h2> {/* Hidden heading for accessibility */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-16" role="list"> {/* Semantic role */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-16" role="list">
             <StatCard value="50+" label="ISP Customers" />
             <StatCard value="4+" label="ISP Centres" />
             <StatCard value="24/7" label="Network Service" />
@@ -182,7 +205,7 @@ export default function Homepage() {
           <motion.p className="text-gray-800 text-center mb-12 max-w-2xl mx-auto text-lg">
             We focus on transforming Kenya’s digital and energy landscapes through seamless service delivery.
           </motion.p>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8" role="list"> {/* Semantic role */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8" role="list">
             <HighlightCard icon={<FaNetworkWired className="text-4xl text-teal-600" />} title="Networking" description="Broadband access and infrastructure." link="/networking" />
             <HighlightCard icon={<FaBolt className="text-4xl text-yellow-500" />} title="Electrical Solutions" description="Smart grids and renewable energy." link="/electrical" />
             <HighlightCard icon={<FaUsers className="text-4xl text-blue-600" />} title="Membership" description="Collaborate with our vibrant community." link="/membership" />
@@ -191,7 +214,7 @@ export default function Homepage() {
         </motion.div>
       </section>
 
-      {/* NEW: Featured Products Section */}
+      {/* NEW: Featured Products Section (now includes modal logic) */}
       <FeaturedProducts />
 
       {/* Newsletter Subscription Section */}
@@ -262,7 +285,7 @@ export default function Homepage() {
 function StatCard({ value, label }: { value: string; label: string }) {
   return (
     <motion.div
-      variants={cardVariant} // This cardVariant is now correctly defined above
+      variants={cardVariant}
       className="p-6 bg-white rounded-xl shadow-md hover:shadow-xl border border-blue-100 text-center transition-transform duration-300 hover:-translate-y-1"
       whileHover={{ scale: 1.05 }}
       role="listitem"
@@ -288,7 +311,7 @@ function HighlightCard({
 }) {
   return (
     <motion.div
-      variants={cardVariant} // This cardVariant is now correctly defined above
+      variants={cardVariant}
       className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 border border-gray-200 hover:border-teal-400"
       whileHover={{ scale: 1.03 }}
       role="listitem"
