@@ -1,8 +1,7 @@
-// app/admin/newsletter.tsx
 "use client"
 import React, { useEffect, useState } from 'react';
-import { NewsletterSubscriber } from '../../interfaces/Product'; // Import from shared interfaces
-import { apiRequest } from '../../lib/api';
+import { NewsletterSubscriber } from '../../interfaces/Product'; // Assuming this interface is correct
+import { apiRequest } from '../../lib/api'; // Your API utility
 
 const NewsletterPage: React.FC = () => {
   const [subscribers, setSubscribers] = useState<NewsletterSubscriber[]>([]);
@@ -17,11 +16,11 @@ const NewsletterPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      // Assuming this API endpoint requires authentication for admin access
-      const data = await apiRequest<NewsletterSubscriber[]>('/newsletter');
+      // CORRECTED: The API route is actually at '/newsletter/subscribers'
+      const data = await apiRequest<NewsletterSubscriber[]>('/newsletter/subscribers');
       setSubscribers(data);
     } catch (err: unknown) {
-      console.error('Error fetching newsletter subscribers:', err); // More specific console log
+      console.error('Error fetching newsletter subscribers:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch newsletter subscribers.');
     } finally {
       setLoading(false);
@@ -45,12 +44,12 @@ const NewsletterPage: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 sm:py-12"> {/* Added responsive padding */}
-      <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-8 text-center tracking-tight">Newsletter Subscribers</h1> {/* Adjusted font size and margin */}
+    <div className="container mx-auto px-4 py-8 sm:py-12">
+      <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-8 text-center tracking-tight">Newsletter Subscribers</h1>
       {subscribers.length === 0 ? (
         <p className="text-center text-gray-600 text-lg py-10">No subscribers found yet.</p>
       ) : (
-        <div className="overflow-x-auto bg-white rounded-xl shadow-lg border border-gray-200"> {/* Added shadow and border */}
+        <div className="overflow-x-auto bg-white rounded-xl shadow-lg border border-gray-200">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-100">
               <tr>
@@ -65,7 +64,7 @@ const NewsletterPage: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{subscriber.id}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{subscriber.email}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {subscriber.subscribed_at ? new Date(subscriber.subscribed_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'} {/* Formatted date */}
+                    {subscriber.subscribed_at ? new Date(subscriber.subscribed_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}
                   </td>
                 </tr>
               ))}
