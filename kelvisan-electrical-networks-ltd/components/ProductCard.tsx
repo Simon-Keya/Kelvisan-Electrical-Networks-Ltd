@@ -103,7 +103,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails, isMod
             className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg text-sm transition duration-300 transform hover:scale-105 shadow-md"
             aria-label={`Order ${product.name} on WhatsApp`}
           >
-            Call to Order
+            Order Via WhatsApp
           </button>
         </Link>
       </div>
