@@ -45,7 +45,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails, isMod
   const handleWhatsAppOrder = () => {
     // Define the business's WhatsApp number and a pre-filled message
     // ⚠️ IMPORTANT: Replace this with your actual business WhatsApp number, including the country code
-    const whatsappNumber = '254712345678';
+    const whatsappNumber = '+254711762682';
     const prefilledMessage = `Hello, I would like to order the product: ${product.name}. Can you provide more details?`;
 
     // Encode the message to ensure it's a valid URL component

@@ -15,7 +15,7 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({ show, onClose
   }
 
   // Define the business's WhatsApp number and a placeholder message
-  const whatsappNumber = '254712345678'; // 👈 REPLACE THIS WITH YOUR BUSINESS WHATSAPP NUMBER
+  const whatsappNumber = '+254711762682'; // 👈 REPLACE THIS WITH YOUR BUSINESS WHATSAPP NUMBER
   const prefilledMessage = `Hello, I would like to order the product: ${product.name}. Can you provide more details?`;
 
   const handleWhatsAppOrder = () => {
