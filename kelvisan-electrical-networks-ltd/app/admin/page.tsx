@@ -13,7 +13,7 @@ import {
     X,
 } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation'; // Now importing usePathname
+import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 // Assuming this utility exists and returns a boolean
@@ -26,7 +26,7 @@ const isAuthenticated = () => {
 // Main component for the admin dashboard page.
 const AdminDashboardPage: React.FC = () => {
   const router = useRouter();
-  const pathname = usePathname(); // Using usePathname to get the current URL path
+  const pathname = usePathname();
   const [authChecked, setAuthChecked] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -42,7 +42,7 @@ const AdminDashboardPage: React.FC = () => {
   // If auth check is not complete, show a loading state
   if (!authChecked) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
+      <div className="flex items-center justify-center w-full h-full bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
         <div className="flex flex-col items-center">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-t-blue-500 border-gray-200"></div>
           <p className="mt-4 text-xl text-gray-600 dark:text-gray-400">Checking authentication...</p>
@@ -62,7 +62,7 @@ const AdminDashboardPage: React.FC = () => {
 
   // Component for the navigation sidebar
   const Sidebar = () => (
-    <aside className={`fixed inset-y-0 left-0 z-50 flex flex-col w-64 bg-gray-900 text-white transition-transform duration-300 transform md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+    <aside className={`flex-shrink-0 w-64 bg-gray-900 text-white transition-transform duration-300 transform md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative z-40`}>
       <div className="flex items-center justify-between h-20 px-6 bg-gray-800">
         <span className="text-2xl font-bold tracking-tight">Admin Panel</span>
         <button className="md:hidden text-gray-400 hover:text-white" onClick={() => setIsSidebarOpen(false)}>
@@ -90,7 +90,7 @@ const AdminDashboardPage: React.FC = () => {
 
   // Component for the main content cards.
   const DashboardCards = () => (
-    <main className="flex-1 p-4 sm:p-8 md:ml-64 transition-all duration-300">
+    <main className="flex-1 p-4 sm:p-8 bg-gray-100">
       <div className="flex items-center justify-between md:hidden mb-4">
         <h1 className="text-3xl font-extrabold text-gray-900">Admin Dashboard</h1>
         <button className="text-gray-900" onClick={() => setIsSidebarOpen(true)}>
@@ -186,9 +186,12 @@ const AdminDashboardPage: React.FC = () => {
   );
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex flex-col md:flex-row w-full h-full">
+      {isSidebarOpen && (
+        <div className="md:hidden absolute inset-0 bg-gray-900 bg-opacity-75 z-40 transition-opacity duration-300" onClick={() => setIsSidebarOpen(false)}></div>
+      )}
       <Sidebar />
-      <DashboardCards />6
+      <DashboardCards />
     </div>
   );
 };
