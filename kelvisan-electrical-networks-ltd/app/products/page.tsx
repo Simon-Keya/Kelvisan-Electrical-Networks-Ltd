@@ -1,16 +1,11 @@
-// app/products/page.tsx
 "use client"; // This component uses client-side hooks like useState, useEffect
 
 import { motion } from 'framer-motion'; // Import motion for animations
 import Image from 'next/image'; // Import Next.js Image component for optimization
-import Link from 'next/link'; // Import Link for navigation
 import React, { useEffect, useState } from 'react';
 import ProductDetailsModal from '../../components/ProductDetailModal'; // Corrected import name for consistency
 import { Product } from '../interfaces/Product'; // <--- IMPORT SHARED PRODUCT INTERFACE
 import { apiRequest } from '../lib/api'; // Utility for making API calls
-
-// Removed: --- SEO Metadata ---
-// Removed: export const metadata = { ... };
 
 // --- Framer Motion Variants ---
 const containerVariants = {
@@ -46,7 +41,20 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails, isModalOpenForThisProduct }) => {
-  const phoneNumber = "+254711762682"; // Consider making this an environment variable or fetching from config
+
+  const handleWhatsAppOrder = () => {
+    // Define the business's WhatsApp number and a pre-filled message
+    // ⚠️ IMPORTANT: Replace this with your actual business WhatsApp number, including the country code
+    const whatsappNumber = '254712345678';
+    const prefilledMessage = `Hello, I would like to order the product: ${product.name}. Can you provide more details?`;
+
+    // Encode the message to ensure it's a valid URL component
+    const encodedMessage = encodeURIComponent(prefilledMessage);
+    // Construct the full WhatsApp deep link URL
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+    // Open the URL in a new browser tab
+    window.open(whatsappUrl, '_blank');
+  };
 
   return (
     <motion.div // Apply motion to the card for animation
@@ -93,20 +101,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails, isMod
           View Details
         </button>
 
-        {/* Call to Order Button - Hover effect only on this button */}
-        <Link href="/contact" passHref className="mt-auto block group">
-          <button
-            className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-lg text-sm transition duration-300 transform hover:scale-105 shadow-md relative overflow-hidden"
-            aria-label={`Call to order ${product.name}`} // Aria label for accessibility
-          >
-            {/* Span for "Call to Order" text - hides on button hover */}
-            <span className="block group-hover:opacity-0 transition-opacity duration-300">Call to Order</span>
-            {/* Span for Phone Number - shows on button hover */}
-            <span className="absolute inset-0 flex items-center justify-center bg-teal-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-hover:pointer-events-auto">
-              {phoneNumber}
-            </span>
-          </button>
-        </Link>
+        {/* This button now calls the handleWhatsAppOrder function */}
+        <button
+          onClick={handleWhatsAppOrder}
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg text-sm transition duration-300 transform hover:scale-105 shadow-md mt-auto"
+          aria-label={`Order ${product.name} via WhatsApp`} // Aria label for accessibility
+        >
+          Order via WhatsApp
+        </button>
       </div>
     </motion.div>
   );
