@@ -56,19 +56,32 @@ const AdminDashboardPage: React.FC = () => {
     { name: 'Subscribers', href: '/admin/newsletter', icon: Users, color: 'text-blue-500' },
   ];
 
+  // A simple, fixed header component to demonstrate the layout
+  const Header = () => (
+    <div className="fixed top-0 left-0 right-0 h-16 bg-white shadow-md flex items-center px-6 z-50">
+      <span className="text-xl font-bold text-teal-700">My App</span>
+    </div>
+  );
+
   // Component for the navigation sidebar
   const Sidebar = () => (
     <aside
-      className={`flex-shrink-0 w-64 bg-white shadow-lg text-gray-800 transition-transform duration-300 transform md:translate-x-0 ${
+      className={`fixed top-16 md:top-0 md:relative flex-shrink-0 w-64 h-[calc(100vh-4rem)] md:h-auto bg-white shadow-lg text-gray-800 transition-transform duration-300 transform md:translate-x-0 ${
         isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      } fixed md:relative h-full z-40`}
+      } z-40`}
     >
-      <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
+      {/* This top section serves as a brand/header area for the sidebar on larger screens */}
+      <div className="hidden md:flex items-center justify-between h-16 px-6 border-b border-gray-200">
         <span className="text-2xl font-bold tracking-tight text-teal-700">Admin Panel</span>
-        <button className="md:hidden text-gray-400 hover:text-gray-600" onClick={() => setIsSidebarOpen(false)}>
+      </div>
+      
+      {/* Mobile close button */}
+      <div className="flex items-center justify-end h-16 px-6 border-b border-gray-200 md:hidden">
+        <button className="text-gray-400 hover:text-gray-600" onClick={() => setIsSidebarOpen(false)}>
           <X size={24} />
         </button>
       </div>
+
       <nav className="flex-1 px-4 py-8 space-y-2">
         {navItems.map((item) => (
           <Link key={item.name} href={item.href} passHref legacyBehavior>
@@ -91,12 +104,15 @@ const AdminDashboardPage: React.FC = () => {
   // Component for the main content cards.
   const DashboardCards = () => (
     <main className="flex-1 p-4 sm:p-8 bg-gray-50 min-h-screen">
+      {/* Mobile header and menu button */}
       <div className="flex items-center justify-between md:hidden mb-4">
         <h1 className="text-3xl font-extrabold text-gray-900">Admin Dashboard</h1>
         <button className="text-gray-900" onClick={() => setIsSidebarOpen(true)}>
           <Menu size={32} />
         </button>
       </div>
+
+      {/* Desktop header */}
       <div className="hidden md:block">
         <h1 className="text-3xl font-extrabold text-gray-900 mb-8">Admin Dashboard</h1>
       </div>
@@ -162,16 +178,19 @@ const AdminDashboardPage: React.FC = () => {
   );
 
   return (
-    <div className="flex flex-col md:flex-row w-full min-h-screen">
-      {isSidebarOpen && (
-        <div
-          className="md:hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-30"
-          onClick={() => setIsSidebarOpen(false)}
-        ></div>
-      )}
-      <Sidebar />
-      <DashboardCards />
-    </div>
+    <>
+      <Header />
+      <div className="flex flex-col md:flex-row w-full min-h-screen pt-16">
+        {isSidebarOpen && (
+          <div
+            className="md:hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-30"
+            onClick={() => setIsSidebarOpen(false)}
+          ></div>
+        )}
+        <Sidebar />
+        <DashboardCards />
+      </div>
+    </>
   );
 };
 
