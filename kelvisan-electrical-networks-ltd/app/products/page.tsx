@@ -60,7 +60,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails, isMod
     >
       <div className="relative w-full h-48 sm:h-56 overflow-hidden">
         <Image // Using Next.js Image component for optimization
-          src={product.image || 'https://placehold.co/400x300/e0e0e0/ffffff?text=No+Image'}
+          src={product.image_url || 'https://placehold.co/400x300/e0e0e0/ffffff?text=No+Image'}
           alt={`Image of ${product.name}`} // Descriptive alt text for SEO and accessibility
           layout="fill" // Fills the parent div
           objectFit="cover" // Covers the area, cropping if necessary
