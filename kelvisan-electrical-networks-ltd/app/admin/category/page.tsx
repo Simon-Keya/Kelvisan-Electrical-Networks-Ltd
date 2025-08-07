@@ -222,4 +222,4 @@ import { apiRequest } from '../../lib/api';
       );
     };
 
-    export default CategoriesPage;
+export default CategoriesPage;
