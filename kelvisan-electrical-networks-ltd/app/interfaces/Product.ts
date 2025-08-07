@@ -1,23 +1,19 @@
-// interfaces/Product.ts (or interfaces/index.ts)
-
-// Define the Product interface in a central location
 export interface Product {
-  id?: number; // Optional as it might not exist when creating a new product
+  id?: string; // Changed to string (UUID)
   name: string;
-  image: string; // This will store the URL of the uploaded image
+  image_url: string; // Changed to image_url to match backend
   description: string;
-  price: number | string; // Allow price to be string when fetched from DB, number for internal use
-  category_id?: number | null; // Optional, can be null if uncategorized
-  category_name?: string | null; // For display purposes, typically joined from backend
-  created_at?: Date; // Optional, read-only from backend
+  price: number; // Backend parses to number
+  category_id?: string | null; // Changed to string (UUID) or null
+  category_name?: string;
 }
 
-// Define the Category interface here as well, if it's also shared
 export interface Category {
-  id: number;
+  id?: string; // Changed to string (UUID)
   name: string;
+  description?: string;
+  created_at?: Date;
 }
-
 // Add NewsletterSubscriber interface
 export interface NewsletterSubscriber {
   id?: number;
