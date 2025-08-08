@@ -76,7 +76,14 @@ export const Navbar = () => {
               Services
               <ChevronDownIcon className="w-4 h-4 ml-2 transition-transform duration-200 group-hover:rotate-180" />
             </button>
-            <div className="absolute top-full left-0 mt-3 hidden group-hover:block bg-teal-700 shadow-lg rounded-md overflow-hidden transition-all duration-300 ease-in-out transform scale-y-0 origin-top group-hover:scale-y-100">
+            {/*
+              * FIX: Removed 'mt-3' and changed 'hidden group-hover:block' to 'invisible group-hover:visible'.
+              * The previous 'mt-3' class created a gap between the button and the dropdown,
+              * causing the dropdown to disappear when the mouse moved into that gap.
+              * This new approach keeps the dropdown menu right next to the button,
+              * ensuring the 'group-hover' state is maintained.
+            */}
+            <div className="absolute top-full left-0 invisible group-hover:visible bg-teal-700 shadow-lg rounded-md overflow-hidden transition-all duration-300 ease-in-out transform scale-y-0 origin-top group-hover:scale-y-100">
               <Link href="/electrical" className="block px-4 py-2 text-sm text-white hover:bg-teal-600 transition duration-200">
                 Electrical
               </Link>
