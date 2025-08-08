@@ -60,7 +60,7 @@ const AdminDashboardPage: React.FC = () => {
   // Component for the navigation sidebar
   const Sidebar = () => (
     <aside
-      className={`fixed top-16 md:relative flex-shrink-0 w-64 h-[calc(100vh-4rem)] md:h-auto bg-white shadow-lg text-gray-800 transition-transform duration-300 transform md:translate-x-0 ${
+      className={`fixed top-10 md:relative flex-shrink-0 w-64 h-[calc(100vh-4rem)] md:h-auto bg-white shadow-lg text-gray-800 transition-transform duration-300 transform md:translate-x-0 ${
         isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
       } z-40`}
     >
@@ -97,7 +97,7 @@ const AdminDashboardPage: React.FC = () => {
 
   // Component for the main content cards.
   const DashboardCards = () => (
-    <main className="flex-1 p-4 sm:p-8 bg-gray-50 min-h-screen">
+    <main className="flex-1 p-4 sm:p-8 bg-gray-50">
       {/* Mobile header and menu button */}
       <div className="flex items-center justify-between md:hidden mb-4">
         <h1 className="text-3xl font-extrabold text-gray-900">Admin Dashboard</h1>
@@ -172,18 +172,18 @@ const AdminDashboardPage: React.FC = () => {
   );
 
   return (
-    <>
-      <div className="flex flex-col md:flex-row w-full min-h-screen pt-16">
-        {isSidebarOpen && (
-          <div
-            className="md:hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-30"
-            onClick={() => setIsSidebarOpen(false)}
-          ></div>
-        )}
-        <Sidebar />
-        <DashboardCards />
-      </div>
-    </>
+    // The pt-16 class adds padding to the top of the entire container,
+    // pushing the content down below a header of a similar height.
+    <div className="flex flex-col md:flex-row w-full h-full pt-16">
+      {isSidebarOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-30"
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+      )}
+      <Sidebar />
+      <DashboardCards />
+    </div>
   );
 };
 
