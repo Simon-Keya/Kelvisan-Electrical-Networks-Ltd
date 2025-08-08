@@ -56,17 +56,10 @@ const AdminDashboardPage: React.FC = () => {
     { name: 'Subscribers', href: '/admin/newsletter', icon: Users, color: 'text-blue-500' },
   ];
 
-  // A simple, fixed header component to demonstrate the layout
-  const Header = () => (
-    <div className="fixed top-0 left-0 right-0 h-16 bg-white shadow-md flex items-center px-6 z-50">
-      <span className="text-xl font-bold text-teal-700">My App</span>
-    </div>
-  );
-
   // Component for the navigation sidebar
   const Sidebar = () => (
     <aside
-      className={`fixed top-16 md:top-0 md:relative flex-shrink-0 w-64 h-[calc(100vh-4rem)] md:h-auto bg-white shadow-lg text-gray-800 transition-transform duration-300 transform md:translate-x-0 ${
+      className={`fixed top-0 md:relative flex-shrink-0 w-64 h-full md:h-auto bg-white shadow-lg text-gray-800 transition-transform duration-300 transform md:translate-x-0 ${
         isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
       } z-40`}
     >
@@ -74,7 +67,7 @@ const AdminDashboardPage: React.FC = () => {
       <div className="hidden md:flex items-center justify-between h-16 px-6 border-b border-gray-200">
         <span className="text-2xl font-bold tracking-tight text-teal-700">Admin Panel</span>
       </div>
-      
+
       {/* Mobile close button */}
       <div className="flex items-center justify-end h-16 px-6 border-b border-gray-200 md:hidden">
         <button className="text-gray-400 hover:text-gray-600" onClick={() => setIsSidebarOpen(false)}>
@@ -178,19 +171,16 @@ const AdminDashboardPage: React.FC = () => {
   );
 
   return (
-    <>
-      <Header />
-      <div className="flex flex-col md:flex-row w-full min-h-screen pt-16">
-        {isSidebarOpen && (
-          <div
-            className="md:hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-30"
-            onClick={() => setIsSidebarOpen(false)}
-          ></div>
-        )}
-        <Sidebar />
-        <DashboardCards />
-      </div>
-    </>
+    <div className="flex w-full min-h-screen">
+      {isSidebarOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-30"
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+      )}
+      <Sidebar />
+      <DashboardCards />
+    </div>
   );
 };
 
