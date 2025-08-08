@@ -56,10 +56,11 @@ const AdminDashboardPage: React.FC = () => {
     { name: 'Subscribers', href: '/admin/newsletter', icon: Users, color: 'text-blue-500' },
   ];
 
+  
   // Component for the navigation sidebar
   const Sidebar = () => (
     <aside
-      className={`fixed top-0 md:relative flex-shrink-0 w-64 h-full md:h-auto bg-white shadow-lg text-gray-800 transition-transform duration-300 transform md:translate-x-0 ${
+      className={`fixed top-16 md:relative flex-shrink-0 w-64 h-[calc(100vh-4rem)] md:h-auto bg-white shadow-lg text-gray-800 transition-transform duration-300 transform md:translate-x-0 ${
         isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
       } z-40`}
     >
@@ -171,16 +172,18 @@ const AdminDashboardPage: React.FC = () => {
   );
 
   return (
-    <div className="flex w-full min-h-screen">
-      {isSidebarOpen && (
-        <div
-          className="md:hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-30"
-          onClick={() => setIsSidebarOpen(false)}
-        ></div>
-      )}
-      <Sidebar />
-      <DashboardCards />
-    </div>
+    <>
+      <div className="flex flex-col md:flex-row w-full min-h-screen pt-16">
+        {isSidebarOpen && (
+          <div
+            className="md:hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-30"
+            onClick={() => setIsSidebarOpen(false)}
+          ></div>
+        )}
+        <Sidebar />
+        <DashboardCards />
+      </div>
+    </>
   );
 };
 
